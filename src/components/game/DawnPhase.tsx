@@ -61,7 +61,8 @@ export default function DawnPhase() {
                       {p.death_reason === 'witch_poison' ? t('dawn.witchKillReason') : t('dawn.wolfKillReason')}
                     </span>
                     <span className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 block">
-                      {t('dawn.realRole')} <strong className="text-slate-800 dark:text-slate-200">{localizedRoleName}</strong>
+                      <span>{t('dawn.realRole')}</span>{' '}
+                      <strong className="text-slate-800 dark:text-slate-200 font-semibold">{localizedRoleName}</strong>
                     </span>
                   </div>
                 </div>

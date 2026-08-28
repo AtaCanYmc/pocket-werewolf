@@ -96,7 +96,10 @@ export default function NightPhase() {
         {/* Player Role Badge */}
         <div className="mt-3 sm:mt-4 inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 text-xs font-semibold shadow-sm">
           <span className="text-base">{roleDef.fallbackIcon}</span>
-          <span className="text-slate-700 dark:text-slate-300">{t('night.yourRole')} <strong className="text-slate-900 dark:text-slate-100 font-gothic">{localizedRoleName}</strong></span>
+          <span className="text-slate-700 dark:text-slate-300">
+            <span>{t('night.yourRole')}</span>{' '}
+            <strong className="text-slate-900 dark:text-slate-100 font-gothic">{localizedRoleName}</strong>
+          </span>
         </div>
       </div>
 
@@ -265,7 +268,10 @@ export default function NightPhase() {
                 <p className="font-gothic font-bold text-sm">
                   {seerResult.targetId ? (
                     <>
-                      {t('night.seerResultTitle')} <strong>{seerResult.targetName}</strong> {t('night.seerResultIs')} <strong>{seerResult.roleName}</strong>!
+                      <span>{t('night.seerResultTitle')}</span>{' '}
+                      <strong className="text-indigo-300 font-bold">{seerResult.targetName}</strong>{' '}
+                      <span>{t('night.seerResultIs')}</span>{' '}
+                      <strong className="text-indigo-200 font-bold">{seerResult.roleName}</strong>!
                     </>
                   ) : (
                     <span>{t('night.skipActionTitle')} ({t('night.passSkipped')})</span>
@@ -308,13 +314,20 @@ export default function NightPhase() {
                       : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-cyan-500 text-slate-800 dark:text-slate-200'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{p.avatar || '👤'}</span>
-                    <span className="text-sm font-semibold">
-                      {p.name} {isMe && `(${t('lobby.you')})`}
-                    </span>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-xl flex-shrink-0">{p.avatar || '👤'}</span>
+                    <div className="flex items-center gap-1.5 min-w-0 truncate">
+                      <span className="text-sm font-semibold truncate block">
+                        {p.name}
+                      </span>
+                      {isMe && (
+                        <span className="text-[10px] text-cyan-400 font-medium flex-shrink-0">
+                          ({t('lobby.you')})
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  {isSelected && <Check className="w-5 h-5 text-cyan-400" />}
+                  {isSelected && <Check className="w-5 h-5 text-cyan-400 flex-shrink-0 ml-2" />}
                 </button>
               );
             })}

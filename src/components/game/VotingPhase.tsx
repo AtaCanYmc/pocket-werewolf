@@ -70,7 +70,10 @@ export default function VotingPhase() {
         </p>
 
         <div className="text-[11px] sm:text-xs font-mono text-slate-600 dark:text-slate-400 mt-1 sm:mt-2">
-          {t('voting.totalVotes')} <strong className="text-red-500 dark:text-red-400">{roundVotes.length}</strong> / {alivePlayers.length}
+          <span>{t('voting.totalVotes')}</span>{' '}
+          <strong className="text-red-500 dark:text-red-400 font-bold">{roundVotes.length}</strong>
+          {' / '}
+          <span>{alivePlayers.length}</span>
         </div>
       </div>
 
@@ -80,44 +83,44 @@ export default function VotingPhase() {
           type="button"
           onClick={handleCastSkipVote}
           disabled={!isAlive}
-          className={`w-full p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] shadow-sm ${
+          className={`w-full p-3.5 sm:p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] shadow-sm ${
             isMyVoteSkip
               ? 'bg-amber-50 dark:bg-amber-950/80 text-amber-900 dark:text-amber-100 border-amber-500 shadow-md ring-2 ring-amber-500/50'
               : 'bg-surface-light border-slate-300 dark:border-slate-800 hover:border-amber-500/60 text-slate-800 dark:text-slate-200'
           }`}
         >
-          <div className="flex items-center gap-3.5">
-            <div className={`p-2.5 rounded-xl ${isMyVoteSkip ? 'bg-amber-500 text-white' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'}`}>
-              <Ban className="w-5 h-5" />
+          <div className="flex items-center gap-3 sm:gap-3.5">
+            <div className={`p-2 sm:p-2.5 rounded-xl ${isMyVoteSkip ? 'bg-amber-500 text-white' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'}`}>
+              <Ban className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm sm:text-base font-bold font-gothic block">
+                <span className="text-xs sm:text-sm font-bold font-gothic block">
                   {t('voting.skipVoteTitle')}
                 </span>
                 <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">
                   {t('voting.skipVoteBadge')}
                 </span>
               </div>
-              <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
-                {isMyVoteSkip ? t('voting.yourSkipVote') : t('voting.skipVoteSubtitle')}
-              </span>
+              <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                {t('voting.skipVoteSubtitle')}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             {skipVoteCount > 0 && (
-              <span className="px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold shadow-inner">
+              <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold">
                 {t('voting.votesBadge', { count: skipVoteCount })}
               </span>
             )}
-            {isMyVoteSkip && <Check className="w-5 h-5 text-amber-500 dark:text-amber-400" />}
+            {isMyVoteSkip && <Check className="w-5 h-5 text-amber-500" />}
           </div>
         </button>
       </div>
 
-      {/* Voting Target Player Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+      {/* Living Players Voting Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
         {alivePlayers.map((p) => {
           const isSelected = myVote?.target_id === p.id;
           const voteCount = voteTally[p.id] || 0;
@@ -128,32 +131,39 @@ export default function VotingPhase() {
               key={p.id}
               onClick={() => handleCastPlayerVote(p.id)}
               disabled={!isAlive}
-              className={`p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] ${
+              className={`p-3 sm:p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] ${
                 isSelected
                   ? 'bg-red-950 text-white border-red-500 shadow-blood-glow ring-2 ring-red-500/50'
                   : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 text-slate-900 dark:text-slate-100'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{p.avatar || '👤'}</span>
-                <div>
-                  <span className="text-sm font-semibold block">
-                    {p.name} {isMe && `(${t('lobby.you')})`}
-                  </span>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <span className="text-xl sm:text-2xl flex-shrink-0">{p.avatar || '👤'}</span>
+                <div className="min-w-0 truncate">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <span className="text-xs sm:text-sm font-semibold truncate block">
+                      {p.name}
+                    </span>
+                    {isMe && (
+                      <span className="text-[10px] text-indigo-500 dark:text-indigo-400 font-medium flex-shrink-0">
+                        ({t('lobby.you')})
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 block truncate">
                     {isSelected ? t('voting.yourVoteOn') : t('voting.tapToVote')}
                   </span>
                 </div>
               </div>
 
               {/* Vote Count Badge */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                 {voteCount > 0 && (
-                  <span className="px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-950 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-mono font-bold shadow-inner">
+                  <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-red-100 dark:bg-red-950 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-mono font-bold shadow-inner">
                     {t('voting.votesBadge', { count: voteCount })}
                   </span>
                 )}
-                {isSelected && <Check className="w-5 h-5 text-red-400" />}
+                {isSelected && <Check className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />}
               </div>
             </button>
           );
