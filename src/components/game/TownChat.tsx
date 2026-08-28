@@ -11,14 +11,18 @@ export default function TownChat() {
   const { t } = useTranslation();
   const [inputText, setInputText] = useState<string>('');
   const [sending, setSending] = useState<boolean>(false);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const prevLogsLengthRef = useRef<number>(logs.length);
 
   const isAlive = me?.is_alive;
 
-  // Auto-scroll to bottom of chat on new messages
+  // Auto-scroll ONLY the internal chat container without scrolling the browser page
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [logs]);
+    if (scrollContainerRef.current && logs.length > prevLogsLengthRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
+    prevLogsLengthRef.current = logs.length;
+  }, [logs.length]);
 
   const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -66,7 +70,7 @@ export default function TownChat() {
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3">
+      <div ref={scrollContainerRef} className="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3">
         {logs.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-4 text-slate-400">
             <Sparkles className="w-8 h-8 text-indigo-400 mb-2 opacity-50" />
@@ -126,7 +130,6 @@ export default function TownChat() {
             );
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Quick Reaction Emojis */}
