@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { X, Database, Key, Check, AlertCircle, RefreshCw, Globe, Sun, Moon, ExternalLink, FileCode, Eye, EyeOff } from 'lucide-react';
+import { X, Database, Key, Check, AlertCircle, RefreshCw, Globe, Sun, Moon, ExternalLink, FileCode } from 'lucide-react';
 import { getSupabaseCredentials, saveSupabaseCredentials } from '@/lib/supabase';
 
 interface SettingsModalProps {
@@ -15,8 +15,6 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { theme, setTheme } = useTheme();
   const [url, setUrl] = useState<string>(currentCreds.url);
   const [key, setKey] = useState<string>(currentCreds.key);
-  const [showUrl, setShowUrl] = useState<boolean>(false);
-  const [showKey, setShowKey] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -130,56 +128,38 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
           </div>
 
-          {/* Credentials Form */}
+          {/* Credentials Form (Always strictly masked password inputs) */}
           <form onSubmit={handleSave} className="space-y-4">
-            {/* Supabase Project URL (Masked / Password Type with Toggle) */}
+            {/* Supabase Project URL (Strictly Masked) */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                 <Database className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                 <span>{t('modals.projectUrl')}</span>
               </label>
-              <div className="relative flex items-center">
-                <input
-                  type={showUrl ? 'text' : 'password'}
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://xyzcompany.supabase.co"
-                  className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-surface-light border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-blood focus:ring-1 focus:ring-blood transition-all font-mono"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowUrl(!showUrl)}
-                  className="absolute right-2.5 p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                  title={showUrl ? 'Hide URL' : 'Show URL'}
-                >
-                  {showUrl ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
+              <input
+                type="password"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://xyzcompany.supabase.co"
+                autoComplete="off"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-blood focus:ring-1 focus:ring-blood transition-all font-mono tracking-wider"
+              />
             </div>
 
-            {/* Supabase Anon Public Key (Masked / Password Type with Toggle) */}
+            {/* Supabase Anon Public Key (Strictly Masked) */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                 <Key className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                 <span>{t('modals.anonKey')}</span>
               </label>
-              <div className="relative flex items-center">
-                <input
-                  type={showKey ? 'text' : 'password'}
-                  value={key}
-                  onChange={(e) => setKey(e.target.value)}
-                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-surface-light border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-blood focus:ring-1 focus:ring-blood transition-all font-mono"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowKey(!showKey)}
-                  className="absolute right-2.5 p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                  title={showKey ? 'Hide Key' : 'Show Key'}
-                >
-                  {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
+              <input
+                type="password"
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                autoComplete="off"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-blood focus:ring-1 focus:ring-blood transition-all font-mono tracking-wider"
+              />
             </div>
 
             <button
