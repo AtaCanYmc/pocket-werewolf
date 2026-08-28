@@ -48,6 +48,12 @@ export async function cleanupStaleRooms(): Promise<void> {
       .from('rooms')
       .delete()
       .lt('created_at', twentyFourHoursAgo);
+
+    // 3. Purge old game chat logs and events created over 24 hours ago
+    await supabase
+      .from('game_logs')
+      .delete()
+      .lt('created_at', twentyFourHoursAgo);
   } catch (err) {
     // Non-critical background cleanup failure
     console.debug('Opportunistic stale rooms cleanup notice:', err);

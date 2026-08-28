@@ -167,6 +167,49 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ==============================================================================
+-- Daily 02:00 AM Game Logs & Maintenance Cleanup
+-- Purges old chat logs and game events every day at 02:00 AM (server time).
+-- ==============================================================================
+CREATE OR REPLACE FUNCTION public.cleanup_daily_game_logs()
+RETURNS integer AS $$
+DECLARE
+    deleted_count integer;
+BEGIN
+    -- Delete all game logs older than 24 hours
+    WITH deleted_logs AS (
+        DELETE FROM public.game_logs
+        WHERE created_at < now() - INTERVAL '24 hours'
+        RETURNING id
+    )
+    SELECT count(*) INTO deleted_count FROM deleted_logs;
+    
+    -- Also trigger stale rooms purge
+    PERFORM public.cleanup_stale_rooms();
+    
+    RETURN deleted_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Grant execution permissions
+GRANT EXECUTE ON FUNCTION public.cleanup_stale_rooms() TO anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.cleanup_daily_game_logs() TO anon, authenticated, service_role;
+
+-- Optional pg_cron scheduling at 02:00 AM every night (if pg_cron extension is active)
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_cron') THEN
+        PERFORM cron.unschedule('daily-game-logs-cleanup');
+        PERFORM cron.schedule(
+            'daily-game-logs-cleanup',
+            '0 2 * * *',
+            'SELECT public.cleanup_daily_game_logs();'
+        );
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN NULL;
+END $$;
+
+-- ==============================================================================
 -- 6. System Settings & Admin Security (Configurable via Supabase Dashboard)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.app_settings (
