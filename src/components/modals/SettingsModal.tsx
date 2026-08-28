@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { X, Database, Key, Check, Copy, AlertCircle, RefreshCw, Globe, Sun, Moon } from 'lucide-react';
+import { X, Database, Key, Check, Copy, AlertCircle, RefreshCw, Globe, Sun, Moon, ExternalLink, Code2, ChevronDown, ChevronUp } from 'lucide-react';
 import { getSupabaseCredentials, saveSupabaseCredentials } from '@/lib/supabase';
+import { SUPABASE_SQL_SCHEMA } from '@/config/sqlSchema';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [url, setUrl] = useState<string>(currentCreds.url);
   const [key, setKey] = useState<string>(currentCreds.key);
   const [copiedSql, setCopiedSql] = useState<boolean>(false);
+  const [showSqlViewer, setShowSqlViewer] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -24,10 +26,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     saveSupabaseCredentials(url.trim(), key.trim());
   };
 
-  const handleCopySqlHint = () => {
-    navigator.clipboard.writeText('supabase/schema.sql');
+  const handleCopySql = () => {
+    navigator.clipboard.writeText(SUPABASE_SQL_SCHEMA);
     setCopiedSql(true);
-    setTimeout(() => setCopiedSql(false), 2000);
+    setTimeout(() => setCopiedSql(false), 2500);
   };
 
   return (
@@ -172,21 +174,61 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </button>
           </form>
 
-          {/* Database Setup Guide */}
-          <div className="bg-surface-light/70 border border-slate-300 dark:border-slate-800 rounded-xl p-4 space-y-2">
+          {/* Database Setup & SQL Schema Downloader */}
+          <div className="bg-surface-light border border-slate-300 dark:border-slate-800 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{t('modals.sqlTitle')}</span>
-              <button
-                onClick={handleCopySqlHint}
-                className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1 font-mono"
+              <div className="flex items-center gap-1.5">
+                <Code2 className="w-4 h-4 text-indigo-500" />
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{t('modals.sqlTitle')}</span>
+              </div>
+              <a
+                href="https://supabase.com/dashboard"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-medium"
               >
-                {copiedSql ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedSql ? t('modals.copied') : 'supabase/schema.sql'}</span>
-              </button>
+                <span>{t('modals.openDashboard')}</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
+
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               {t('modals.sqlSub')}
             </p>
+
+            {/* Quick Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleCopySql}
+                className={`flex-1 py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border ${
+                  copiedSql
+                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-glow'
+                    : 'bg-indigo-600 hover:bg-indigo-500 text-white border-indigo-500 shadow-mystic-glow'
+                }`}
+              >
+                {copiedSql ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedSql ? t('modals.sqlCopied') : t('modals.copyFullSql')}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowSqlViewer(!showSqlViewer)}
+                className="py-2 px-3 rounded-xl bg-surface border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-medium flex items-center justify-center gap-1 transition-all"
+              >
+                <span>{showSqlViewer ? t('modals.hideSql') : t('modals.viewSql')}</span>
+                {showSqlViewer ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+
+            {/* Collapsible SQL Viewer Drawer */}
+            {showSqlViewer && (
+              <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-800 animate-slide-up">
+                <pre className="p-3 bg-slate-950 text-slate-200 rounded-xl text-[11px] font-mono overflow-x-auto max-h-52 select-all border border-slate-800 leading-relaxed">
+                  {SUPABASE_SQL_SCHEMA}
+                </pre>
+              </div>
+            )}
           </div>
         </div>
 
