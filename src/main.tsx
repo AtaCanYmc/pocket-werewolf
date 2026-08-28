@@ -4,7 +4,16 @@ import App from '@/App';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { GameProvider } from '@/context/GameContext';
+import { registerSW } from 'virtual:pwa-register';
 import './index.css';
+
+// Automatically register and update service worker on new deployments
+registerSW({
+  immediate: true,
+  onNeedRefresh() {
+    window.location.reload();
+  },
+});
 
 // Main Application Entrypoint with Theme, Multi-Language & Game Providers
 const rootElement = document.getElementById('root');
