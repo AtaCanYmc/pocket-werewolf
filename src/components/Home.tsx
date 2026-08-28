@@ -116,8 +116,16 @@ export default function Home({ onOpenSettings }: HomeProps) {
       )}
 
       {error && (
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-red-500/10 border border-red-500 text-red-600 dark:text-red-300 text-xs text-center">
-          ⚠️ {error}
+        <div
+          onClick={onOpenSettings}
+          className="p-3.5 sm:p-4 rounded-2xl bg-red-500/10 border border-red-500 text-red-600 dark:text-red-300 text-xs text-center flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:bg-red-500/20 transition-all shadow-md active:scale-[0.99]"
+        >
+          <div className="flex items-center gap-1.5 font-semibold">
+            <span>⚠️ {error}</span>
+          </div>
+          <span className="text-[11px] text-red-500 dark:text-red-400 font-bold underline">
+            {t('home.setupBtn')}
+          </span>
         </div>
       )}
 

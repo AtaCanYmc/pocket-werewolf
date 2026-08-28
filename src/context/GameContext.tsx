@@ -287,6 +287,20 @@ export function GameProvider({ children }: { children: ReactNode }) {
     };
   }, [room?.id, refreshRoomData]);
 
+  const formatErrorMessage = (err: any): string => {
+    const msg = err?.message || String(err);
+    if (
+      msg.includes('410') ||
+      msg.toLowerCase().includes('preflight') ||
+      msg.toLowerCase().includes('failed to fetch') ||
+      msg.toLowerCase().includes('load failed') ||
+      msg.toLowerCase().includes('access control checks')
+    ) {
+      return 'Supabase project is unreachable (HTTP 410 Gone / Network Error). Your project may be paused due to inactivity. Please unpause/restore it in the Supabase Dashboard or update your URL/Key in Settings.';
+    }
+    return msg;
+  };
+
   // 1. Create Room Action
   const handleCreateRoom = async (
     customDeck: RoleDeckItem[] | null = null,
@@ -309,7 +323,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setPlayers([newPlayer]);
       return newRoom;
     } catch (err: any) {
-      setError(err.message || 'Failed to create room.');
+      setError(formatErrorMessage(err));
       throw err;
     } finally {
       setLoading(false);
@@ -330,7 +344,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setRoom(joinedRoom);
       return joinedRoom;
     } catch (err: any) {
-      setError(err.message || 'Error joining room.');
+      setError(formatErrorMessage(err));
       throw err;
     } finally {
       setLoading(false);
