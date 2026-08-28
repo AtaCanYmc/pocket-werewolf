@@ -715,6 +715,12 @@ export async function resolveVotingPhase(
   const supabase = getSupabase();
   if (!supabase) return;
 
+  const alivePlayers = players.filter(p => p.is_alive);
+  if (votes.length < alivePlayers.length && alivePlayers.length > 0) {
+    console.warn('Cannot resolve voting: some living players have not cast their vote yet.');
+    return;
+  }
+
   const voteCounts: Record<string, number> = {};
   let skipVotes = 0;
 

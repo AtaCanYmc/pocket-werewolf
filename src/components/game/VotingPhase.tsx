@@ -171,24 +171,53 @@ export default function VotingPhase() {
       </div>
 
       {/* Host Resolve Voting Button */}
-      {isHost ? (
-        <div className="bg-surface border border-surface-border rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 className="font-gothic font-bold text-slate-900 dark:text-slate-100">{t('voting.hostTitle')}</h4>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              {t('voting.hostSubtitle')}
-            </p>
+      {isHost ? (() => {
+        const livingVotedCount = roundVotes.length;
+        const totalLivingCount = alivePlayers.length;
+        const allVoted = livingVotedCount >= totalLivingCount && totalLivingCount > 0;
+        const canExecute = allVoted && !loading;
+
+        return (
+          <div className="bg-surface border border-surface-border rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-gothic font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base">{t('voting.hostTitle')}</h4>
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                  allVoted
+                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                    : 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                }`}>
+                  {livingVotedCount} / {totalLivingCount}
+                </span>
+              </div>
+              <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                {allVoted ? t('voting.allVotedSubtitle') : t('voting.waitingVotesSubtitle')}
+              </p>
+            </div>
+            <button
+              onClick={resolveVoting}
+              disabled={!canExecute}
+              className={`w-full sm:w-auto py-3 sm:py-3.5 px-6 sm:px-8 rounded-xl font-gothic font-bold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg flex items-center justify-center gap-2 flex-shrink-0 ${
+                canExecute
+                  ? 'bg-red-600 hover:bg-red-500 text-white shadow-blood-glow active:scale-[0.99] cursor-pointer'
+                  : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed opacity-75'
+              }`}
+            >
+              <Skull className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>
+                {loading
+                  ? t('voting.resolvingBtn')
+                  : canExecute
+                  ? t('voting.resolveVotingBtn')
+                  : t('voting.resolveVotingBtnDisabled', {
+                      count: livingVotedCount,
+                      total: totalLivingCount,
+                    })}
+              </span>
+            </button>
           </div>
-          <button
-            onClick={resolveVoting}
-            disabled={loading}
-            className="w-full sm:w-auto py-3.5 px-8 rounded-xl bg-red-600 hover:bg-red-500 text-white font-gothic font-bold text-sm tracking-wider uppercase transition-all shadow-blood-glow flex items-center justify-center gap-2 active:scale-[0.99]"
-          >
-            <Skull className="w-5 h-5" />
-            <span>{loading ? t('voting.resolvingBtn') : t('voting.resolveVotingBtn')}</span>
-          </button>
-        </div>
-      ) : (
+        );
+      })() : (
         <div className="p-3.5 rounded-xl bg-surface-light border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 text-center animate-pulse">
           {t('voting.waitingHost')}
         </div>
