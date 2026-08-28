@@ -277,13 +277,20 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabase();
     if (supabase && me && room) {
       if (isHost && players.length > 1) {
+        // Transfer host leadership to the next remaining player
         const nextHost = players.find(p => p.id !== me.id);
         if (nextHost) {
           await supabase.from('players').update({ is_host: true }).eq('id', nextHost.id);
           await supabase.from('rooms').update({ host_session_id: nextHost.session_id }).eq('id', room.id);
         }
+        await supabase.from('players').delete().eq('id', me.id);
+      } else if (isHost || players.length <= 1) {
+        // Host leaving alone or last player leaving: purge the entire room (ON DELETE CASCADE cleans everything)
+        await supabase.from('rooms').delete().eq('id', room.id);
+      } else {
+        // Regular player leaving
+        await supabase.from('players').delete().eq('id', me.id);
       }
-      await supabase.from('players').delete().eq('id', me.id);
     }
     setRoom(null);
     setPlayers([]);

@@ -100,3 +100,18 @@ To provide zero-latency atmospheric sound without bundling hundreds of megabytes
 - **Church Bells:** Harmonic sine frequency blend with exponential decay envelopes.
 - **Death Gong:** Deep sub-bass square waves modulated with white noise burst.
 - **Victory Fanfare:** Tri-tone harmonic chord cadence.
+
+---
+
+## 6. Room Lifecycle & Automated Stale Data Purging
+
+To guarantee high database performance and prevent abandoned room codes from accumulating, Pocket Werewolf uses a 3-tier self-cleaning lifecycle:
+
+1. **Immediate Host Departure Purge:**
+   - When the host leaves a lobby room where no other players remain (or when the last player leaves), the application executes an immediate `DELETE FROM public.rooms WHERE id = room_id`.
+   - `ON DELETE CASCADE` instantly purges related records in `players`, `night_actions`, `votes`, and `game_logs`.
+2. **Client-Side Opportunistic Background Purge:**
+   - Every time a new room is created or joined, the client triggers a background task (`cleanupStaleRooms()`) that deletes abandoned lobbies older than 6 hours and finished matches older than 24 hours.
+3. **Database Stored Procedure (`cleanup_stale_rooms()`):**
+   - A PostgreSQL function defined in `supabase/schema.sql` can be triggered manually or scheduled via `pg_cron` / Supabase scheduled functions for automated batch garbage collection.
+

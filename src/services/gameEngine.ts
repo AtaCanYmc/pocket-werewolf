@@ -25,6 +25,36 @@ export function generateRoomCode(): string {
 }
 
 /**
+ * Opportunistically purges stale abandoned lobbies (> 6 hours) and finished matches (> 24 hours).
+ * Runs in the background without blocking client execution.
+ */
+export async function cleanupStaleRooms(): Promise<void> {
+  const supabase = getSupabase();
+  if (!supabase) return;
+
+  try {
+    const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+    // 1. Purge stale lobbies created over 6 hours ago
+    await supabase
+      .from('rooms')
+      .delete()
+      .eq('status', 'lobby')
+      .lt('created_at', sixHoursAgo);
+
+    // 2. Purge stale matches created over 24 hours ago
+    await supabase
+      .from('rooms')
+      .delete()
+      .lt('created_at', twentyFourHoursAgo);
+  } catch (err) {
+    // Non-critical background cleanup failure
+    console.debug('Opportunistic stale rooms cleanup notice:', err);
+  }
+}
+
+/**
  * 1. Creates a new room and registers the host player.
  */
 export async function createRoom(
@@ -36,6 +66,9 @@ export async function createRoom(
 ): Promise<{ room: Room; player: Player }> {
   const supabase = getSupabase();
   if (!supabase) throw new Error('Supabase is not configured!');
+
+  // Trigger non-blocking background stale rooms cleanup
+  cleanupStaleRooms().catch(() => {});
 
   const code = generateRoomCode();
 
@@ -97,6 +130,9 @@ export async function joinRoom(
 ): Promise<{ room: Room; player: Player }> {
   const supabase = getSupabase();
   if (!supabase) throw new Error('Supabase is not configured!');
+
+  // Trigger non-blocking background stale rooms cleanup
+  cleanupStaleRooms().catch(() => {});
 
   const cleanCode = roomCode.trim().toUpperCase();
 

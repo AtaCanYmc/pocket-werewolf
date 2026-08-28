@@ -138,3 +138,28 @@ BEGIN
 EXCEPTION
     WHEN duplicate_object THEN NULL;
 END $$;
+
+-- ==============================================================================
+-- Automated Stale Rooms Cleanup Stored Procedure
+-- Purges abandoned lobbies (> 6 hours) and finished/stale matches (> 24 hours).
+-- Cascades automatically to players, actions, votes, and logs.
+-- ==============================================================================
+CREATE INDEX IF NOT EXISTS idx_rooms_status_created_at ON public.rooms(status, created_at);
+
+CREATE OR REPLACE FUNCTION public.cleanup_stale_rooms()
+RETURNS integer AS $$
+DECLARE
+    deleted_count integer;
+BEGIN
+    WITH deleted_rooms AS (
+        DELETE FROM public.rooms
+        WHERE (status = 'lobby' AND created_at < now() - INTERVAL '6 hours')
+           OR (created_at < now() - INTERVAL '24 hours')
+        RETURNING id
+    )
+    SELECT count(*) INTO deleted_count FROM deleted_rooms;
+    
+    RETURN deleted_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
