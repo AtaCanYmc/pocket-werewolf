@@ -52,24 +52,24 @@ export default function VotingPhase() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-6 animate-fade-in">
+    <div className="max-w-3xl w-full mx-auto px-3 sm:px-4 py-2 sm:py-4 space-y-4 sm:space-y-6 animate-fade-in">
       {/* Voting Header */}
-      <div className="bg-gradient-to-b from-red-500/10 via-surface to-surface border border-red-500/30 dark:border-red-900/60 rounded-3xl p-6 shadow-2xl text-center space-y-2">
+      <div className="bg-gradient-to-b from-red-500/10 via-surface to-surface border border-red-500/30 dark:border-red-900/60 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-center space-y-1.5 sm:space-y-2">
         <div className="flex items-center justify-center gap-2">
-          <Vote className="w-6 h-6 text-red-500 animate-bounce" />
-          <span className="text-xs font-mono font-bold tracking-widest text-red-600 dark:text-red-400 uppercase">
+          <Vote className="w-5 h-5 sm:w-6 sm:h-6 text-red-500 animate-bounce" />
+          <span className="text-[11px] sm:text-xs font-mono font-bold tracking-widest text-red-600 dark:text-red-400 uppercase">
             {t('voting.votingTag')}
           </span>
         </div>
 
-        <h2 className="font-gothic text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-100">
+        <h2 className="font-gothic text-2xl sm:text-4xl font-black text-slate-900 dark:text-slate-100">
           {t('voting.title')}
         </h2>
-        <p className="text-xs text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+        <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
           {t('voting.subtitle')}
         </p>
 
-        <div className="text-xs font-mono text-slate-600 dark:text-slate-400 mt-2">
+        <div className="text-[11px] sm:text-xs font-mono text-slate-600 dark:text-slate-400 mt-1 sm:mt-2">
           {t('voting.totalVotes')} <strong className="text-red-500 dark:text-red-400">{roundVotes.length}</strong> / {alivePlayers.length}
         </div>
       </div>

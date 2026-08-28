@@ -24,28 +24,28 @@ export default function GameOverPhase() {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-6 animate-fade-in text-center">
+    <div className="max-w-3xl w-full mx-auto px-3 sm:px-4 py-2 sm:py-4 space-y-4 sm:space-y-6 animate-fade-in text-center">
       {/* Victory Header */}
       <div
-        className={`border rounded-3xl p-8 shadow-2xl space-y-3 ${
+        className={`border rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl space-y-2 sm:space-y-3 ${
           isEvilWinner
             ? 'bg-gradient-to-b from-red-500/10 dark:from-red-950/80 via-surface to-surface border-red-400 dark:border-red-800 shadow-blood-glow'
             : 'bg-gradient-to-b from-emerald-500/10 dark:from-emerald-950/80 via-surface to-surface border-emerald-400 dark:border-emerald-800 shadow-emerald-glow'
         }`}
       >
-        <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-4xl shadow-lg bg-surface-light border border-slate-300 dark:border-slate-700">
+        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl sm:text-4xl shadow-lg bg-surface-light border border-slate-300 dark:border-slate-700">
           {isEvilWinner ? '🐺' : '🏆'}
         </div>
 
-        <span className="text-xs font-mono font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">
+        <span className="text-[11px] sm:text-xs font-mono font-bold tracking-widest uppercase text-slate-500 dark:text-slate-400">
           {t('gameOver.endedTag')}
         </span>
 
-        <h2 className="font-gothic text-3xl sm:text-5xl font-black text-slate-900 dark:text-slate-100">
+        <h2 className="font-gothic text-2xl sm:text-5xl font-black text-slate-900 dark:text-slate-100">
           {isEvilWinner ? t('gameOver.werewolvesWon') : t('gameOver.villagersWon')}
         </h2>
 
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+        <p className="text-[11px] sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
           {isEvilWinner
             ? t('gameOver.werewolvesWonSub')
             : t('gameOver.villagersWonSub')}
@@ -53,7 +53,7 @@ export default function GameOverPhase() {
       </div>
 
       {/* Complete Roster & Real Identities */}
-      <div className="bg-surface border border-surface-border rounded-2xl p-6 shadow-xl text-left space-y-4">
+      <div className="bg-surface border border-surface-border rounded-2xl p-4 sm:p-6 shadow-xl text-left space-y-3 sm:space-y-4">
         <h3 className="font-gothic font-bold text-slate-900 dark:text-slate-100 text-lg flex items-center gap-2">
           <Trophy className="w-5 h-5 text-amber-500" />
           <span>{t('gameOver.allRolesTitle')}</span>

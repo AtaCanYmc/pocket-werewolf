@@ -53,7 +53,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-background text-slate-900 dark:text-slate-100 selection:bg-blood selection:text-white transition-colors duration-300">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col justify-between bg-background text-slate-900 dark:text-slate-100 selection:bg-blood selection:text-white transition-colors duration-300">
       {/* Top Header Navigation */}
       <Header
         onOpenSettings={() => setIsSettingsOpen(true)}
@@ -62,12 +62,12 @@ export default function App() {
       />
 
       {/* Main Game Phase Content */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-2 sm:px-6 py-2 sm:py-6 flex flex-col justify-center">
+      <main className="flex-1 w-full max-w-5xl mx-auto px-2.5 sm:px-6 py-2.5 sm:py-6 flex flex-col">
         {renderGameContent()}
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-4 text-center text-xs text-slate-500 dark:text-slate-500 border-t border-surface-border">
+      <footer className="w-full py-3 sm:py-4 text-center text-[11px] sm:text-xs text-slate-500 dark:text-slate-500 border-t border-surface-border">
         <p>{t('app.footer')}</p>
       </footer>
 

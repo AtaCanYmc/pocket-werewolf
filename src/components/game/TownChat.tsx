@@ -42,7 +42,7 @@ export default function TownChat() {
   if (!room || !me) return null;
 
   return (
-    <div className="bg-surface border border-surface-border rounded-2xl shadow-xl flex flex-col h-[480px] overflow-hidden">
+    <div className="bg-surface border border-surface-border rounded-2xl shadow-xl flex flex-col h-[320px] sm:h-[460px] overflow-hidden">
       {/* Chat Header */}
       <div className="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800 bg-surface-light/60 flex items-center justify-between">
         <div className="flex items-center gap-2">

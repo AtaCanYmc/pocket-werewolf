@@ -9,15 +9,15 @@ export default function RoleRevealPhase() {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-xl mx-auto p-4 flex flex-col items-center justify-center min-h-[75vh] animate-fade-in text-center">
-      <div className="space-y-1 mb-2">
-        <span className="text-xs font-mono uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-bold">
+    <div className="w-full max-w-xl mx-auto px-3 sm:px-4 py-2 sm:py-6 flex flex-col items-center justify-center animate-fade-in text-center space-y-3 sm:space-y-4">
+      <div className="space-y-1">
+        <span className="text-[11px] sm:text-xs font-mono uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-bold">
           {t('roleReveal.phaseTag')}
         </span>
-        <h2 className="font-gothic text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100">
+        <h2 className="font-gothic text-xl sm:text-3xl font-black text-slate-900 dark:text-slate-100">
           {t('roleReveal.title')}
         </h2>
-        <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
+        <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
           {t('roleReveal.subtitle')}
         </p>
       </div>
