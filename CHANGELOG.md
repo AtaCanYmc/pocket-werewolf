@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.3.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.2.0...pocket-werewolf-v2.3.0) (2026-08-28)
+
+
+### ✨ Features
+
+* **chat:** implement real-time town square chat and reactions for day discussion and trial phases ([0eff388](https://github.com/AtaCanYmc/pocket-werewolf/commit/0eff3880f5f4bad3557e3712b0b595003f456dc1))
+* **database:** add automated 02:00 AM daily game logs and stale rooms cleanup procedure ([9f30b07](https://github.com/AtaCanYmc/pocket-werewolf/commit/9f30b07bbacf64d343ad81e93966dd6a39bfbebb))
+* **gameplay:** enable night action roles to pass/skip their action during the night ([fba295d](https://github.com/AtaCanYmc/pocket-werewolf/commit/fba295d4c05890db8e60ebc1be6a518db9e896a5))
+* **voting:** lock lynch execution until every living player has cast their vote ([80de918](https://github.com/AtaCanYmc/pocket-werewolf/commit/80de918a3a8fd5c812cc13d7b3867ed5aceddc00))
+
+
+### 🐛 Bug Fixes
+
+* **chat:** prevent TownChat from scrolling the entire browser window down on mobile ([47a0077](https://github.com/AtaCanYmc/pocket-werewolf/commit/47a00771eed9f0b985c7b9b9bf2de07ae4f54051))
+* **errors:** gracefully detect and handle Supabase HTTP 410 Gone / paused project status ([0972214](https://github.com/AtaCanYmc/pocket-werewolf/commit/09722144ecff98f51f9240c96a264fe9c3f2a3e0))
+* **gameplay:** count werewolf pass action (target_id null) as completed in checkNightActionsStatus ([7393583](https://github.com/AtaCanYmc/pocket-werewolf/commit/7393583adebb04db63e8db463305b998d15971b1))
+* **i18n:** complete all missing translation keys across EN, TR, FR, and DE dictionaries ([e1ac87b](https://github.com/AtaCanYmc/pocket-werewolf/commit/e1ac87ba707ab221096ffc4b2dd0ac99c856c71c))
+* **layout:** compact mobile top bar header to prevent horizontal overflow on small screens ([c6384bd](https://github.com/AtaCanYmc/pocket-werewolf/commit/c6384bd95291fc53e013ef9890c4a9116455174e))
+* **responsive:** enhance mobile and desktop viewport layouts, dynamic heights, and safe area fitting ([3a8763c](https://github.com/AtaCanYmc/pocket-werewolf/commit/3a8763cf751eddd87b784377c52f0e829ce99613))
+* **security:** mask SUPABASE PROJECT URL field with visibility toggle in settings modal ([bff8edd](https://github.com/AtaCanYmc/pocket-werewolf/commit/bff8eddfb045905c612ba7ab9c30c986aa506e13))
+* **sync:** implement instant optimistic UI updates and background heartbeat sync for zero-latency player state ([23c8567](https://github.com/AtaCanYmc/pocket-werewolf/commit/23c8567ef07ab7c0002f8a25791db392456f4dc9))
+* **ui:** eliminate text concatenation collisions, fix mobile header layouts, and enhance responsive spacing ([36f44cc](https://github.com/AtaCanYmc/pocket-werewolf/commit/36f44cce49ea9ab0d683dc97e5a925195f21daf0))
+
 ## [2.2.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.1.0...pocket-werewolf-v2.2.0) (2026-08-28)
 
 
