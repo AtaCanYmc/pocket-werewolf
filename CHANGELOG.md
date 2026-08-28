@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.1.0...pocket-werewolf-v2.2.0) (2026-08-28)
+
+
+### ✨ Features
+
+* **deploy:** configure Vercel SPA routing, PWA caching, and add 1-click self-hosting guide ([508179f](https://github.com/AtaCanYmc/pocket-werewolf/commit/508179f069fbfecbb5800f620cfb4791168ae60b))
+* **gameplay:** add Dream Math Minigame for sleeping villagers during night phase ([d68586e](https://github.com/AtaCanYmc/pocket-werewolf/commit/d68586e883c5f967ce1a29ed9ba37232c9ff14f4))
+* **gameplay:** prevent host from advancing to dawn until all active night roles submit actions ([23af8ce](https://github.com/AtaCanYmc/pocket-werewolf/commit/23af8ce51dd4afd0efcac554e8d1d4216fa37089))
+* **lifecycle:** implement 3-tier automated stale rooms cleanup and host disband purge ([2e00a76](https://github.com/AtaCanYmc/pocket-werewolf/commit/2e00a76633724d6ae89f27e34b2fde6fc7588016))
+* **security:** add VITE_ADMIN_PASSWORD configuration to restrict room creation ([654ade9](https://github.com/AtaCanYmc/pocket-werewolf/commit/654ade942999242977bdab1f06a24a63e1df0564))
+* **security:** control and verify admin room creation password dynamically in Supabase ([4613221](https://github.com/AtaCanYmc/pocket-werewolf/commit/461322113be4cf70f49d3208b30f2313dac05653))
+* **share:** add instant QR code generator for room invitation ([a2ceaa3](https://github.com/AtaCanYmc/pocket-werewolf/commit/a2ceaa31a9ac090be9b4f2e3a7db0675c8ece63c))
+* **voting:** allow casting blank/skip vote during town execution trial ([7c1c45c](https://github.com/AtaCanYmc/pocket-werewolf/commit/7c1c45c842eec6587c1925fd81e1cdd796518814))
+
+
+### 📚 Documentation
+
+* **readme:** add comprehensive Frequently Asked Questions (FAQ) section ([262e3ed](https://github.com/AtaCanYmc/pocket-werewolf/commit/262e3ed7769e9d1e30b834f8125fd3dd5dc3aadc))
+
+
+### ♻️ Code Refactoring
+
+* **security:** remove redundant VITE_ADMIN_PASSWORD env var in favor of pure Supabase RPC ([1f00110](https://github.com/AtaCanYmc/pocket-werewolf/commit/1f001101923c86c1e0015c13adcb807983927505))
+
+
+### 👷 Continuous Integration
+
+* **github-pages:** pass repository secrets and variables into Vite production build ([811ce7e](https://github.com/AtaCanYmc/pocket-werewolf/commit/811ce7e18f0c12a9c71cf76a1ef7a328dd5478af))
+
 ## [2.1.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.0.0...pocket-werewolf-v2.1.0) (2026-08-28)
 
 
