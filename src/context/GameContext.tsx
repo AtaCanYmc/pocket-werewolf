@@ -158,7 +158,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       },
     });
 
-    // Listen to Database Changes
+    // Listen to Database Changes with direct payload integration
     channel
       .on(
         'postgres_changes',
@@ -176,32 +176,62 @@ export function GameProvider({ children }: { children: ReactNode }) {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
-        () => {
-          supabase.from('players').select('*').eq('room_id', roomId).order('joined_at', { ascending: true })
-            .then(({ data }) => data && setPlayers(data));
+        (payload: any) => {
+          if (payload.eventType === 'INSERT') {
+            setPlayers(prev => {
+              const exists = prev.some(p => p.id === payload.new.id);
+              if (exists) return prev.map(p => p.id === payload.new.id ? { ...p, ...payload.new } : p);
+              return [...prev, payload.new];
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            setPlayers(prev => prev.map(p => p.id === payload.new.id ? { ...p, ...payload.new } : p));
+          } else if (payload.eventType === 'DELETE') {
+            setPlayers(prev => prev.filter(p => p.id !== payload.old.id));
+          }
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'night_actions', filter: `room_id=eq.${roomId}` },
-        () => {
-          supabase.from('night_actions').select('*').eq('room_id', roomId)
-            .then(({ data }) => data && setNightActions(data));
+        (payload: any) => {
+          if (payload.eventType === 'INSERT') {
+            setNightActions(prev => {
+              const exists = prev.some(a => a.id === payload.new.id);
+              if (exists) return prev.map(a => a.id === payload.new.id ? { ...a, ...payload.new } : a);
+              return [...prev, payload.new];
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            setNightActions(prev => prev.map(a => a.id === payload.new.id ? { ...a, ...payload.new } : a));
+          } else if (payload.eventType === 'DELETE') {
+            setNightActions(prev => prev.filter(a => a.id !== payload.old.id));
+          }
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
-        () => {
-          supabase.from('votes').select('*').eq('room_id', roomId)
-            .then(({ data }) => data && setVotes(data));
+        (payload: any) => {
+          if (payload.eventType === 'INSERT') {
+            setVotes(prev => {
+              const exists = prev.some(v => v.id === payload.new.id);
+              if (exists) return prev.map(v => v.id === payload.new.id ? { ...v, ...payload.new } : v);
+              return [...prev, payload.new];
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            setVotes(prev => prev.map(v => v.id === payload.new.id ? { ...v, ...payload.new } : v));
+          } else if (payload.eventType === 'DELETE') {
+            setVotes(prev => prev.filter(v => v.id !== payload.old.id));
+          }
         }
       )
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'game_logs', filter: `room_id=eq.${roomId}` },
         (payload: any) => {
-          setLogs(prev => [...prev, payload.new]);
+          setLogs(prev => {
+            if (prev.some(l => l.id === payload.new.id)) return prev;
+            return [...prev, payload.new];
+          });
           if (payload.new.type === 'lynch' || payload.new.type === 'night_result') {
             sound.playDeathGong();
           }
@@ -228,6 +258,34 @@ export function GameProvider({ children }: { children: ReactNode }) {
       channel.unsubscribe();
     };
   }, [room?.id, sessionId, profile.name, profile.avatar, refreshRoomData]);
+
+  // Active Background Heartbeat & Visibility Catch-up
+  useEffect(() => {
+    if (!room?.id) return;
+
+    const roomId = room.id;
+
+    // 1. Regular 3-second heartbeat to ensure consistency
+    const interval = setInterval(() => {
+      refreshRoomData(roomId);
+    }, 3000);
+
+    // 2. Catch up on missed events when user returns to tab
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshRoomData(roomId);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+    };
+  }, [room?.id, refreshRoomData]);
 
   // 1. Create Room Action
   const handleCreateRoom = async (
@@ -306,14 +364,25 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setLogs([]);
   };
 
-  // 4. Toggle Ready Status
+  // 4. Toggle Ready Status (with Instant Optimistic Update)
   const handleToggleReady = async (): Promise<void> => {
     const supabase = getSupabase();
     if (!supabase || !me) return;
 
     sound.playClick();
     const newReadyState = !me.is_ready;
-    await supabase.from('players').update({ is_ready: newReadyState }).eq('id', me.id);
+
+    // Instant optimistic update
+    setPlayers(prev => prev.map(p => p.id === me.id ? { ...p, is_ready: newReadyState } : p));
+
+    try {
+      const { error: updateError } = await supabase.from('players').update({ is_ready: newReadyState }).eq('id', me.id);
+      if (updateError) throw updateError;
+    } catch (err) {
+      // Revert state if network call fails
+      setPlayers(prev => prev.map(p => p.id === me.id ? { ...p, is_ready: !newReadyState } : p));
+      console.error('Failed to toggle ready status:', err);
+    }
   };
 
   // 5. Kick Player Action (Host only)
@@ -321,6 +390,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabase();
     if (!supabase || !isHost) return;
 
+    // Instant optimistic update
+    setPlayers(prev => prev.filter(p => p.id !== playerId));
     await supabase.from('players').delete().eq('id', playerId);
   };
 
@@ -329,6 +400,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabase();
     if (!supabase || !isHost || !room) return;
 
+    // Instant optimistic update
+    setRoom(prev => prev ? { ...prev, deck: newDeck } : null);
     await supabase.from('rooms').update({ deck: newDeck }).eq('id', room.id);
   };
 
@@ -352,10 +425,25 @@ export function GameProvider({ children }: { children: ReactNode }) {
     await advanceToNight(room.id, room.round);
   };
 
-  // 9. Submit Night Action
+  // 9. Submit Night Action (with Instant Optimistic Update)
   const handleNightAction = async (actionType: NightActionType, targetId: string | null, result: any = null): Promise<void> => {
     if (!room || !me) return;
     sound.playClick();
+
+    // Instant optimistic update
+    setNightActions(prev => {
+      const filtered = prev.filter(a => !(a.actor_id === me.id && a.round === room.round && a.action_type === actionType));
+      return [...filtered, {
+        id: 'opt_' + Date.now(),
+        room_id: room.id,
+        round: room.round,
+        actor_id: me.id,
+        action_type: actionType,
+        target_id: targetId,
+        result
+      }];
+    });
+
     await submitNightAction(room.id, room.round, me.id, actionType, targetId, result);
   };
 
@@ -382,10 +470,27 @@ export function GameProvider({ children }: { children: ReactNode }) {
     await advanceToVoting(room.id, room.round);
   };
 
-  // 13. Cast Vote
+  // 13. Cast Vote (with Instant Optimistic Update)
   const handleVote = async (targetId: string | null, isRetract: boolean = false): Promise<void> => {
     if (!room || !me) return;
     sound.playClick();
+
+    // Instant optimistic update
+    if (isRetract) {
+      setVotes(prev => prev.filter(v => !(v.voter_id === me.id && v.round === room.round)));
+    } else {
+      setVotes(prev => {
+        const filtered = prev.filter(v => !(v.voter_id === me.id && v.round === room.round));
+        return [...filtered, {
+          id: 'opt_' + Date.now(),
+          room_id: room.id,
+          round: room.round,
+          voter_id: me.id,
+          target_id: targetId
+        }];
+      });
+    }
+
     await submitVote(room.id, room.round, me.id, targetId, isRetract);
   };
 
@@ -400,11 +505,30 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // 15. Send Player Chat Message
+  // 15. Send Player Chat Message (with Instant Optimistic Update)
   const handleSendChatMessage = async (message: string): Promise<void> => {
     if (!room || !me) return;
     sound.playClick();
-    await sendChatMessage(room.id, room.round, me.id, me.name, me.avatar, message);
+
+    const clean = message.trim();
+    if (!clean) return;
+
+    // Instant optimistic update
+    setLogs(prev => [
+      ...prev,
+      {
+        id: 'opt_msg_' + Date.now(),
+        room_id: room.id,
+        round: room.round,
+        message: clean,
+        type: 'chat',
+        sender_id: me.id,
+        sender_name: me.name,
+        sender_avatar: me.avatar
+      }
+    ]);
+
+    await sendChatMessage(room.id, room.round, me.id, me.name, me.avatar, clean);
   };
 
   // 16. Reset Back to Lobby (Host only)
