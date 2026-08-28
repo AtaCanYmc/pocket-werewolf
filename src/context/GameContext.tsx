@@ -48,7 +48,7 @@ interface GameContextValue {
   soundEnabled: boolean;
   toggleSound: () => void;
   onlinePresence: Record<string, any>;
-  createRoom: (customDeck?: RoleDeckItem[] | null, settings?: RoomSettings) => Promise<Room>;
+  createRoom: (customDeck?: RoleDeckItem[] | null, settings?: RoomSettings, adminPassword?: string) => Promise<Room>;
   joinRoom: (code: string) => Promise<Room>;
   leaveRoom: () => Promise<void>;
   toggleReady: () => Promise<void>;
@@ -228,7 +228,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [room?.id, sessionId, profile.name, profile.avatar, refreshRoomData]);
 
   // 1. Create Room Action
-  const handleCreateRoom = async (customDeck: RoleDeckItem[] | null = null, settings: RoomSettings = {}): Promise<Room> => {
+  const handleCreateRoom = async (
+    customDeck: RoleDeckItem[] | null = null,
+    settings: RoomSettings = {},
+    adminPassword?: string
+  ): Promise<Room> => {
     setLoading(true);
     setError(null);
     try {
@@ -238,7 +242,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
         profile.name,
         profile.avatar,
         initialDeck,
-        settings
+        settings,
+        adminPassword
       );
       setRoom(newRoom);
       setPlayers([newPlayer]);

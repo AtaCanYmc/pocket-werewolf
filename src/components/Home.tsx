@@ -3,6 +3,7 @@ import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { Play, Plus, ArrowRight, Shield, Sparkles, Smartphone, Users, Lock } from 'lucide-react';
 import { AVATARS } from '@/utils/session';
+import { checkAdminPasswordRequired } from '@/services/gameEngine';
 
 interface HomeProps {
   onOpenSettings: () => void;
@@ -18,11 +19,21 @@ export default function Home({ onOpenSettings }: HomeProps) {
   const [activeTab, setActiveTab] = useState<'create' | 'join'>('create');
   const [showAvatarPicker, setShowAvatarPicker] = useState<boolean>(false);
 
-  // Admin password configuration check
-  const configuredAdminPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined)?.trim() || '';
-  const requiresAdminPassword = Boolean(configuredAdminPassword);
+  // Dynamic Supabase / Env Admin Password Check
+  const [requiresAdminPassword, setRequiresAdminPassword] = useState<boolean>(false);
   const [adminPasswordInput, setAdminPasswordInput] = useState<string>(() => sessionStorage.getItem('PW_ADMIN_PASSWORD') || '');
   const [adminPasswordError, setAdminPasswordError] = useState<string | null>(null);
+
+  // Check Supabase admin password requirement whenever credentials or view loads
+  useEffect(() => {
+    let isMounted = true;
+    checkAdminPasswordRequired().then((required) => {
+      if (isMounted) setRequiresAdminPassword(required);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [credentials]);
 
   // If URL contains `?code=ABCD`, auto-populate code and switch to join tab
   useEffect(() => {
@@ -45,17 +56,23 @@ export default function Home({ onOpenSettings }: HomeProps) {
       return;
     }
 
-    if (requiresAdminPassword) {
-      if (adminPasswordInput.trim() !== configuredAdminPassword) {
-        setAdminPasswordError(t('home.adminPasswordError'));
-        return;
-      }
-      sessionStorage.setItem('PW_ADMIN_PASSWORD', adminPasswordInput.trim());
-      setAdminPasswordError(null);
+    if (requiresAdminPassword && !adminPasswordInput.trim()) {
+      setAdminPasswordError(t('home.adminPasswordError'));
+      return;
     }
 
     updateProfile(name, avatar);
-    await createRoom();
+    try {
+      await createRoom(null, undefined, adminPasswordInput.trim());
+      if (requiresAdminPassword) {
+        sessionStorage.setItem('PW_ADMIN_PASSWORD', adminPasswordInput.trim());
+      }
+      setAdminPasswordError(null);
+    } catch (err: any) {
+      if (err.message && err.message.toLowerCase().includes('admin password')) {
+        setAdminPasswordError(t('home.adminPasswordError'));
+      }
+    }
   };
 
   const handleJoin = async (e: React.FormEvent) => {

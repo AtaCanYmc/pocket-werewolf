@@ -55,6 +55,48 @@ export async function cleanupStaleRooms(): Promise<void> {
 }
 
 /**
+ * Checks if Supabase (or environment fallback) requires an admin password to create a room.
+ */
+export async function checkAdminPasswordRequired(): Promise<boolean> {
+  const envPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined)?.trim() || '';
+  if (envPassword) return true;
+
+  const supabase = getSupabase();
+  if (!supabase) return false;
+
+  try {
+    const { data, error } = await supabase.rpc('is_admin_password_required');
+    if (error) return false;
+    return Boolean(data);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Verifies the provided admin password securely in Supabase PostgreSQL (or env fallback).
+ */
+export async function verifyAdminPassword(password: string): Promise<boolean> {
+  const envPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined)?.trim() || '';
+  if (envPassword) {
+    return password.trim() === envPassword;
+  }
+
+  const supabase = getSupabase();
+  if (!supabase) return true;
+
+  try {
+    const { data, error } = await supabase.rpc('verify_admin_password', {
+      input_password: password
+    });
+    if (error) return false;
+    return Boolean(data);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * 1. Creates a new room and registers the host player.
  */
 export async function createRoom(
@@ -62,10 +104,20 @@ export async function createRoom(
   hostName: string,
   hostAvatar: string,
   initialDeck: RoleDeckItem[],
-  settings: RoomSettings = {}
+  settings: RoomSettings = {},
+  adminPassword?: string
 ): Promise<{ room: Room; player: Player }> {
   const supabase = getSupabase();
   if (!supabase) throw new Error('Supabase is not configured!');
+
+  // Verify admin password if required by Supabase or env
+  const isRequired = await checkAdminPasswordRequired();
+  if (isRequired) {
+    const isValid = await verifyAdminPassword(adminPassword || '');
+    if (!isValid) {
+      throw new Error('Incorrect admin password. Room creation is restricted.');
+    }
+  }
 
   // Trigger non-blocking background stale rooms cleanup
   cleanupStaleRooms().catch(() => {});

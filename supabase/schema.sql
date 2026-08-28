@@ -163,3 +163,54 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- ==============================================================================
+-- 6. System Settings & Admin Security (Configurable via Supabase Dashboard)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.app_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT,
+    description TEXT,
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Seed default admin_password setting (empty by default = room creation is public)
+INSERT INTO public.app_settings (key, value, description)
+VALUES ('admin_password', '', 'Password required to create rooms. If empty, room creation is public.')
+ON CONFLICT (key) DO NOTHING;
+
+-- Enable RLS on app_settings to prevent exposing raw values via public REST API
+ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
+
+-- 1. Checks if room creation requires an admin password (returns boolean without exposing password)
+CREATE OR REPLACE FUNCTION public.is_admin_password_required()
+RETURNS boolean AS $$
+DECLARE
+    pwd text;
+BEGIN
+    SELECT value INTO pwd FROM public.app_settings WHERE key = 'admin_password';
+    RETURN (pwd IS NOT NULL AND length(trim(pwd)) > 0);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 2. Securely verifies the provided admin password inside PostgreSQL
+CREATE OR REPLACE FUNCTION public.verify_admin_password(input_password text)
+RETURNS boolean AS $$
+DECLARE
+    actual_pwd text;
+BEGIN
+    SELECT value INTO actual_pwd FROM public.app_settings WHERE key = 'admin_password';
+    
+    -- If no password is set in database, verification passes automatically
+    IF actual_pwd IS NULL OR length(trim(actual_pwd)) = 0 THEN
+        RETURN true;
+    END IF;
+    
+    RETURN (input_password IS NOT NULL AND trim(input_password) = trim(actual_pwd));
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Grant execution to anon and authenticated roles
+GRANT EXECUTE ON FUNCTION public.is_admin_password_required() TO anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.verify_admin_password(text) TO anon, authenticated, service_role;
+
+
