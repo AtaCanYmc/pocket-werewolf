@@ -22,17 +22,24 @@ Pocket Werewolf comes pre-configured with a continuous deployment pipeline in `.
 
 ---
 
-## 2. Deploy to Vercel
+## 2. Deploy to Vercel (1-Click & Manual)
 
+### Option A: 1-Click Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAtaCanYmc%2Fpocket-werewolf&env=VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY&envDescription=Supabase%20Project%20URL%20and%20Anon%20Public%20Key&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=pocket-werewolf&repository-name=pocket-werewolf)
+
+Click the button above to clone and deploy your own instance of Pocket Werewolf in seconds.
+
+### Option B: Manual Import
 1. Import your GitHub repository on [vercel.com](https://vercel.com).
 2. Configure project settings:
-   - **Framework Preset:** Vite
+   - **Framework Preset:** `Vite` (pre-configured via `vercel.json`)
    - **Build Command:** `npm run build`
    - **Output Directory:** `dist`
-3. Add Environment Variables (optional, can also be entered in-app):
+3. Add Environment Variables:
    - `VITE_SUPABASE_URL`: `https://your-project.supabase.co`
    - `VITE_SUPABASE_ANON_KEY`: `your-anon-public-key`
-4. Click **Deploy**.
+4. Click **Deploy**. Vercel will automatically apply SPA rewrite rules and optimized PWA caching headers configured in [`vercel.json`](../vercel.json).
 
 ---
 

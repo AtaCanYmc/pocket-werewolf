@@ -15,7 +15,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![i18n: 4 Languages](https://img.shields.io/badge/i18n-EN%20%7C%20TR%20%7C%20FR%20%7C%20DE-blue)](#-internationalization-i18n)
 
-[Play Live Demo](https://AtaCanYmc.github.io/pocket-werewolf/) • [Report Bug](https://github.com/AtaCanYmc/pocket-werewolf/issues) • [Request Feature](https://github.com/AtaCanYmc/pocket-werewolf/issues)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAtaCanYmc%2Fpocket-werewolf&env=VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY&envDescription=Supabase%20Project%20URL%20and%20Anon%20Public%20Key&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=pocket-werewolf&repository-name=pocket-werewolf)
+
+[Play Live Demo](https://AtaCanYmc.github.io/pocket-werewolf/) • [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAtaCanYmc%2Fpocket-werewolf) • [Report Bug](https://github.com/AtaCanYmc/pocket-werewolf/issues) • [Request Feature](https://github.com/AtaCanYmc/pocket-werewolf/issues)
 
 </div>
 
@@ -204,19 +206,45 @@ To add a new language, simply add a language code entry to [`src/i18n/translatio
 
 ---
 
-## 🚢 Deployment
+## 🚢 Deploy Your Own Instance (Self-Hosting Guide)
 
-### Deploy to GitHub Pages (Automated)
-1. Push your repository to GitHub.
-2. In your repo settings, go to **Settings → Pages**.
+You can host your own private instance of **Pocket Werewolf** in under 2 minutes with **$0 server costs**.
+
+### ⚡ Option 1: 1-Click Deploy to Vercel (Recommended)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAtaCanYmc%2Fpocket-werewolf&env=VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY&envDescription=Supabase%20Project%20URL%20and%20Anon%20Public%20Key&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=pocket-werewolf&repository-name=pocket-werewolf)
+
+1. Click the **"Deploy with Vercel"** button above.
+2. Sign in to your GitHub and Vercel accounts.
+3. Create a free project at [supabase.com](https://supabase.com) and run the [`supabase/schema.sql`](./supabase/schema.sql) in **SQL Editor**.
+4. Enter your `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` when prompted in Vercel.
+5. Click **Deploy** — your live PWA will be online instantly!
+
+---
+
+### 🐙 Option 2: Automated GitHub Pages (Free via GitHub Actions)
+
+1. **Fork** or push this repository to your GitHub account.
+2. Go to **Settings → Pages** in your GitHub repository.
 3. Under **Build and deployment > Source**, select **"GitHub Actions"**.
-4. Every push to `main` will automatically trigger `.github/workflows/ci-cd.yml` and publish your live app.
+4. GitHub Actions will automatically compile, test, and publish your game to `https://<your-username>.github.io/pocket-werewolf/`.
+5. Enter your Supabase credentials in the in-app **Settings (⚙️)** modal.
 
-### Deploy to Vercel / Netlify / Cloudflare
-1. Connect your GitHub repository.
-2. Set Build Command: `npm run build`
-3. Set Output Directory: `dist`
-4. Set Environment Variables: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
+---
+
+### 🌐 Option 3: Netlify / Cloudflare Pages
+
+1. Connect your repository to Netlify or Cloudflare Pages.
+2. Configure build settings:
+   - **Framework Preset:** `Vite`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+3. Add environment variables:
+   - `VITE_SUPABASE_URL`: `https://your-project.supabase.co`
+   - `VITE_SUPABASE_ANON_KEY`: `your-anon-public-key`
+4. Click **Deploy**.
+
+For detailed deployment instructions and custom domain setup, read [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md).
 
 ---
 
