@@ -4,6 +4,7 @@ import { useTranslation } from '@/context/LanguageContext';
 import { Moon, Skull, Eye, Heart, Sparkles, Check, Sun } from 'lucide-react';
 import { ROLES } from '@/config/roles';
 import DreamMathMinigame from '@/components/game/DreamMathMinigame';
+import { checkNightActionsStatus } from '@/services/gameEngine';
 
 interface SeerResult {
   targetId: string;
@@ -294,24 +295,51 @@ export default function NightPhase() {
       )}
 
       {/* Host Controls for Resolving Night */}
-      {isHost && (
-        <div className="bg-surface border border-surface-border rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 className="font-gothic font-bold text-slate-900 dark:text-slate-200">{t('night.hostControlTitle')}</h4>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              {t('night.hostControlSubtitle')}
-            </p>
+      {isHost && (() => {
+        const nightStatus = checkNightActionsStatus(players, nightActions, currentRound);
+        const canAdvance = nightStatus.allCompleted && !loading;
+
+        return (
+          <div className="bg-surface border border-surface-border rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-gothic font-bold text-slate-900 dark:text-slate-200">{t('night.hostControlTitle')}</h4>
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                  nightStatus.allCompleted
+                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                    : 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                }`}>
+                  {nightStatus.totalCompleted} / {nightStatus.totalRequired}
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                {nightStatus.allCompleted ? t('night.allActionsReady') : t('night.hostControlSubtitle')}
+              </p>
+            </div>
+            <button
+              onClick={resolveNight}
+              disabled={!canAdvance}
+              className={`w-full sm:w-auto py-3 px-6 rounded-xl font-gothic font-bold text-sm tracking-wider uppercase transition-all shadow-lg flex items-center justify-center gap-2 ${
+                canAdvance
+                  ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-500/30 active:scale-[0.99] cursor-pointer'
+                  : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed opacity-75'
+              }`}
+            >
+              <Sun className="w-4 h-4 fill-current" />
+              <span>
+                {loading
+                  ? t('night.resolvingBtn')
+                  : canAdvance
+                  ? t('night.advanceDawnBtn')
+                  : t('night.advanceDawnBtnDisabled', {
+                      completed: nightStatus.totalCompleted,
+                      total: nightStatus.totalRequired,
+                    })}
+              </span>
+            </button>
           </div>
-          <button
-            onClick={resolveNight}
-            disabled={loading}
-            className="w-full sm:w-auto py-3 px-6 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-gothic font-bold text-sm tracking-wider uppercase transition-all shadow-lg flex items-center justify-center gap-2 active:scale-[0.99]"
-          >
-            <Sun className="w-4 h-4 fill-white" />
-            <span>{loading ? t('night.resolvingBtn') : t('night.advanceDawnBtn')}</span>
-          </button>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

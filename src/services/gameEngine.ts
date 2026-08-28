@@ -355,6 +355,82 @@ export async function submitNightAction(
 }
 
 /**
+ * Evaluates whether all required living night roles have submitted their night actions.
+ */
+export function checkNightActionsStatus(
+  players: Player[],
+  actions: NightAction[],
+  round: number
+): {
+  allCompleted: boolean;
+  totalRequired: number;
+  totalCompleted: number;
+  wolfDone: boolean;
+  seerDone: boolean;
+  doctorDone: boolean;
+  sorceressDone: boolean;
+} {
+  const alivePlayers = players.filter(p => p.is_alive);
+
+  const livingWolves = alivePlayers.filter(p => p.role === 'Werewolf');
+  const livingSeer = alivePlayers.find(p => p.role === 'Seer');
+  const livingDoctor = alivePlayers.find(p => p.role === 'Doctor');
+  const livingSorceress = alivePlayers.find(p => p.role === 'Sorceress');
+
+  // Werewolf pack requires at least 1 kill target submitted by living wolves
+  const wolfDone = livingWolves.length === 0 || actions.some(
+    a => a.round === round && a.action_type === 'werewolf_kill' && a.target_id !== null
+  );
+
+  // Seer requires 1 inspection
+  const seerDone = !livingSeer || actions.some(
+    a => a.round === round && a.actor_id === livingSeer.id && a.action_type === 'seer_inspect'
+  );
+
+  // Doctor requires 1 protection
+  const doctorDone = !livingDoctor || actions.some(
+    a => a.round === round && a.actor_id === livingDoctor.id && a.action_type === 'doctor_heal'
+  );
+
+  // Sorceress requires 1 inspection
+  const sorceressDone = !livingSorceress || actions.some(
+    a => a.round === round && a.actor_id === livingSorceress.id && a.action_type === 'sorceress_inspect'
+  );
+
+  let totalRequired = 0;
+  let totalCompleted = 0;
+
+  if (livingWolves.length > 0) {
+    totalRequired++;
+    if (wolfDone) totalCompleted++;
+  }
+  if (livingSeer) {
+    totalRequired++;
+    if (seerDone) totalCompleted++;
+  }
+  if (livingDoctor) {
+    totalRequired++;
+    if (doctorDone) totalCompleted++;
+  }
+  if (livingSorceress) {
+    totalRequired++;
+    if (sorceressDone) totalCompleted++;
+  }
+
+  const allCompleted = (totalRequired === 0) || (totalCompleted >= totalRequired);
+
+  return {
+    allCompleted,
+    totalRequired,
+    totalCompleted,
+    wolfDone,
+    seerDone,
+    doctorDone,
+    sorceressDone
+  };
+}
+
+/**
  * 6. Resolves all night actions and transitions to Dawn / Morning.
  */
 export async function resolveNightPhase(
@@ -365,6 +441,13 @@ export async function resolveNightPhase(
 ): Promise<void> {
   const supabase = getSupabase();
   if (!supabase) return;
+
+  // Verify all required night actions are completed before resolving
+  const status = checkNightActionsStatus(players, actions, round);
+  if (!status.allCompleted) {
+    console.warn('Cannot resolve night: some active roles have not completed their actions yet.');
+    return;
+  }
 
   // 1. Determine Werewolf Attack Target
   const wolfKills = actions.filter(a => a.action_type === 'werewolf_kill' && a.target_id);
