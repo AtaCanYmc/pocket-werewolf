@@ -17,7 +17,13 @@ Pocket Werewolf comes pre-configured with a continuous deployment pipeline in `.
    `https://github.com/<your-username>/pocket-werewolf`
 3. Click **Settings** > **Pages** (in the left sidebar).
 4. Under **Build and deployment > Source**, select **"GitHub Actions"**.
-5. The deployment will run automatically and your live game will be accessible at:
+5. *(Optional but Recommended)* Add Supabase environment variables:
+   - Go to **Settings** > **Secrets and variables** > **Actions**.
+   - Under **Secrets** (or **Variables**), add:
+     - `VITE_SUPABASE_URL`: `https://your-project.supabase.co`
+     - `VITE_SUPABASE_ANON_KEY`: `your-anon-public-key`
+     - `VITE_ADMIN_PASSWORD`: *(Optional admin room creation password)*
+6. The deployment workflow in `.github/workflows/ci-cd.yml` automatically passes these variables during `npm run build` and your live game will be accessible at:
    `https://<your-username>.github.io/pocket-werewolf/`
 
 ---
