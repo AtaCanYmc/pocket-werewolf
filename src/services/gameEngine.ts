@@ -427,9 +427,9 @@ export function checkNightActionsStatus(
   const livingDoctor = alivePlayers.find(p => p.role === 'Doctor');
   const livingSorceress = alivePlayers.find(p => p.role === 'Sorceress');
 
-  // Werewolf pack requires at least 1 kill target submitted by living wolves
+  // Werewolf pack requires at least 1 action (attack or pass) submitted by living wolves
   const wolfDone = livingWolves.length === 0 || actions.some(
-    a => a.round === round && a.action_type === 'werewolf_kill' && a.target_id !== null
+    a => a.round === round && a.action_type === 'werewolf_kill'
   );
 
   // Seer requires 1 inspection
