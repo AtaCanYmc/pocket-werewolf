@@ -3,6 +3,7 @@ import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { Moon, Skull, Eye, Heart, Sparkles, Check, Sun } from 'lucide-react';
 import { ROLES } from '@/config/roles';
+import DreamMathMinigame from '@/components/game/DreamMathMinigame';
 
 interface SeerResult {
   targetId: string;
@@ -288,14 +289,8 @@ export default function NightPhase() {
           </div>
         </div>
       ) : (
-        // 😴 Peaceful Slumber
-        <div className="bg-surface border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center space-y-3">
-          <div className="text-5xl animate-float">😴</div>
-          <h3 className="font-gothic font-bold text-xl text-slate-900 dark:text-slate-200">{t('night.sleepTitle')}</h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-            {t('night.sleepSubtitle')}
-          </p>
-        </div>
+        // 😴 Dream Math Minigame for Sleeping Villagers & Inactive Roles
+        <DreamMathMinigame />
       )}
 
       {/* Host Controls for Resolving Night */}
