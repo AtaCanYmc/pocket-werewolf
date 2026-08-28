@@ -863,3 +863,34 @@ export async function resetToLobby(roomId: string): Promise<void> {
     })
     .eq('id', roomId);
 }
+
+/**
+ * 12. Sends a real-time player chat message in the town square.
+ */
+export async function sendChatMessage(
+  roomId: string,
+  round: number,
+  senderId: string,
+  senderName: string,
+  senderAvatar: string,
+  message: string
+): Promise<void> {
+  const supabase = getSupabase();
+  if (!supabase) return;
+
+  const cleanMessage = message.trim().slice(0, 280);
+  if (!cleanMessage) return;
+
+  await supabase.from('game_logs').insert([
+    {
+      room_id: roomId,
+      round,
+      message: cleanMessage,
+      type: 'chat',
+      sender_id: senderId,
+      sender_name: senderName,
+      sender_avatar: senderAvatar
+    }
+  ]);
+}
+

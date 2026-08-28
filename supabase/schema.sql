@@ -71,13 +71,16 @@ CREATE TABLE IF NOT EXISTS public.votes (
     CONSTRAINT unique_voter_per_round UNIQUE (room_id, round, voter_id)
 );
 
--- 5. Game Logs Table (Narrative Events)
+-- 5. Game Logs & Town Chat Table (Narrative Events & Player Discussion)
 CREATE TABLE IF NOT EXISTS public.game_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     room_id UUID NOT NULL REFERENCES public.rooms(id) ON DELETE CASCADE,
     round INT NOT NULL DEFAULT 1,
     message TEXT NOT NULL,
     type VARCHAR(32) NOT NULL DEFAULT 'info', -- 'info', 'night_result', 'lynch', 'warning', 'chat'
+    sender_id UUID REFERENCES public.players(id) ON DELETE SET NULL,
+    sender_name VARCHAR(50) DEFAULT NULL,
+    sender_avatar VARCHAR(10) DEFAULT NULL,
     target_role VARCHAR(50) DEFAULT NULL, -- Null is visible to all; 'Werewolf' visible only to wolves
     created_at TIMESTAMPTZ DEFAULT now()
 );

@@ -169,6 +169,14 @@ export const translations: Record<LanguageCode, any> = {
       advanceVotingBtn: 'PROCEED TO VOTING (TRIAL)',
       waitingHost: 'Discussion in progress. Waiting for host to proceed to voting...',
     },
+    chat: {
+      title: 'Town Square Chat',
+      subtitle: 'Real-time discussion & accusations',
+      empty: 'No messages yet. Break the silence and share your suspicions!',
+      placeholder: 'Type a message to the village...',
+      ghostBadge: 'Ghost',
+      ghostPlaceholder: 'Speak from the spirit realm...',
+    },
     voting: {
       votingTag: 'TOWN TRIAL • VOTING',
       title: 'Whom Will You Execute?',
@@ -185,6 +193,8 @@ export const translations: Record<LanguageCode, any> = {
       resolveVotingBtn: 'TALLY VOTES & EXECUTE',
       resolvingBtn: 'Calculating...',
       waitingHost: 'Once everyone has voted, the host will tally the verdict...',
+      toggleChatShow: 'Show Village Chat',
+      toggleChatHide: 'Hide Village Chat',
     },
     gameOver: {
       endedTag: 'GAME OVER',
@@ -437,6 +447,14 @@ export const translations: Record<LanguageCode, any> = {
       advanceVotingBtn: 'OYLAMAYA GEÇ (MAHKEME)',
       waitingHost: 'Tartışma devam ediyor. Oda kurucusu hazır olduğunda oylama fazına geçilecek...',
     },
+    chat: {
+      title: 'Köy Meydanı Sohbeti',
+      subtitle: 'Canlı tartışma & şüphe paylaşımları',
+      empty: 'Henüz mesaj yok. Sessizliği bozup şüphelerinizi paylaşın!',
+      placeholder: 'Köye bir mesaj yaz...',
+      ghostBadge: 'Ruh',
+      ghostPlaceholder: 'Ruhlar aleminden fısılda...',
+    },
     voting: {
       votingTag: 'KÖY MAHKEMESİ • OYLAMA',
       title: 'Kimi İnfaz Edeceksiniz?',
@@ -453,6 +471,8 @@ export const translations: Record<LanguageCode, any> = {
       resolveVotingBtn: 'OYLARI SAY & İNFAZ ET',
       resolvingBtn: 'Hesaplanıyor...',
       waitingHost: 'Herkes oyunu kullandıktan sonra kurucu oyları sayacaktır...',
+      toggleChatShow: 'Köy Sohbetini Aç',
+      toggleChatHide: 'Köy Sohbetini Kapat',
     },
     gameOver: {
       endedTag: 'OYUN SONA ERDİ',
@@ -705,6 +725,14 @@ export const translations: Record<LanguageCode, any> = {
       advanceVotingBtn: 'PASSER AU VOTE (TRIBUNAL)',
       waitingHost: 'Débat en cours. En attente de l’hôte pour passer au vote...',
     },
+    chat: {
+      title: 'Chat de la Place du Village',
+      subtitle: 'Discussion & accusations en direct',
+      empty: 'Aucun message pour l’instant. Partagez vos soupçons !',
+      placeholder: 'Écrivez un message au village...',
+      ghostBadge: 'Fantôme',
+      ghostPlaceholder: 'Chuchotez depuis l’au-delà...',
+    },
     voting: {
       votingTag: 'TRIBUNAL DU VILLAGE • VOTE',
       title: 'Qui voulez-vous exécuter ?',
@@ -721,6 +749,8 @@ export const translations: Record<LanguageCode, any> = {
       resolveVotingBtn: 'COMPTER LES VOTES & EXÉCUTER',
       resolvingBtn: 'Calcul...',
       waitingHost: 'Dès que tout le monde aura voté, l’hôte proclamera le verdict...',
+      toggleChatShow: 'Afficher le Chat du Village',
+      toggleChatHide: 'Masquer le Chat',
     },
     gameOver: {
       endedTag: 'FIN DE PARTIE',
@@ -973,6 +1003,14 @@ export const translations: Record<LanguageCode, any> = {
       advanceVotingBtn: 'ZUR ABSTIMMUNG (GERICHT)',
       waitingHost: 'Diskussion läuft. Warten auf Spielleiter für die Abstimmung...',
     },
+    chat: {
+      title: 'Dorfplatz-Chat',
+      subtitle: 'Echtzeit-Diskussion & Verdächtigungen',
+      empty: 'Noch keine Nachrichten. Teile deine Vermutungen mit dem Dorf!',
+      placeholder: 'Nachricht an das Dorf schreiben...',
+      ghostBadge: 'Geist',
+      ghostPlaceholder: 'Flüstere aus dem Geisterreich...',
+    },
     voting: {
       votingTag: 'DORFGERICHT • ABSTIMMUNG',
       title: 'Wen möchtet ihr hinrichten?',
@@ -989,6 +1027,8 @@ export const translations: Record<LanguageCode, any> = {
       resolveVotingBtn: 'STIMMEN ZÄHLEN & HINRICHTEN',
       resolvingBtn: 'Berechnung...',
       waitingHost: 'Sobald alle abgestimmt haben, verkündet der Spielleiter das Urteil...',
+      toggleChatShow: 'Dorfplatz-Chat anzeigen',
+      toggleChatHide: 'Chat ausblenden',
     },
     gameOver: {
       endedTag: 'SPIEL VORBEI',

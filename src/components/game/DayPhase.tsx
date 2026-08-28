@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
 import TimerBar from '@/components/common/TimerBar';
-import { Users, Vote, Pause, Play, Shield, Skull } from 'lucide-react';
+import TownChat from '@/components/game/TownChat';
+import { Users, Vote, Pause, Play, Shield, Skull, MessageSquare } from 'lucide-react';
 import { ROLES } from '@/config/roles';
 
 export default function DayPhase() {
@@ -20,7 +21,7 @@ export default function DayPhase() {
   const dayDuration = room.settings?.dayDuration || 90;
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
+    <div className="max-w-5xl mx-auto p-4 space-y-6 animate-fade-in">
       {/* Day Header */}
       <div className="bg-surface border border-surface-border rounded-3xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
@@ -68,10 +69,11 @@ export default function DayPhase() {
         </div>
       )}
 
-      {/* Living and Dead Players Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Left Column: Living Players (8 Columns) */}
-        <div className="md:col-span-8 space-y-4">
+      {/* Main Discussion Layout: Players & Live Chat */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column: Living Players & Graveyard (7 Cols) */}
+        <div className="lg:col-span-6 space-y-4">
+          {/* Living Players List */}
           <div className="bg-surface border border-surface-border rounded-2xl p-5 shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -83,7 +85,7 @@ export default function DayPhase() {
               <span className="text-xs text-slate-500 dark:text-slate-400">{t('day.aliveSubtitle')}</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {alivePlayers.map((p) => {
                 const isMe = p.id === me.id;
                 const isSuspect = suspectId === p.id;
@@ -92,7 +94,7 @@ export default function DayPhase() {
                   <div
                     key={p.id}
                     onClick={() => setSuspectId(isSuspect ? null : p.id)}
-                    className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] ${
+                    className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all active:scale-[0.99] ${
                       isSuspect
                         ? 'bg-red-50 dark:bg-red-950/40 border-red-500 shadow-blood-glow'
                         : isMe
@@ -100,21 +102,21 @@ export default function DayPhase() {
                         : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{p.avatar || '👤'}</span>
-                      <div>
-                        <span className="text-sm font-semibold text-slate-900 dark:text-slate-100 block">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-xl flex-shrink-0">{p.avatar || '👤'}</span>
+                      <div className="truncate">
+                        <span className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 block truncate">
                           {p.name} {isMe && `(${t('lobby.you')})`}
                         </span>
-                        <span className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                          <Shield className="w-3 h-3" />
+                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                          <Shield className="w-2.5 h-2.5" />
                           <span>{t('day.aliveStatus')}</span>
                         </span>
                       </div>
                     </div>
 
                     {isSuspect && (
-                      <span className="text-xs font-bold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-950 px-2 py-1 rounded-md border border-red-300 dark:border-red-800">
+                      <span className="text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-950 px-2 py-0.5 rounded border border-red-300 dark:border-red-800 flex-shrink-0">
                         {t('day.suspectBadge')}
                       </span>
                     )}
@@ -123,20 +125,18 @@ export default function DayPhase() {
               })}
             </div>
           </div>
-        </div>
 
-        {/* Right Column: Graveyard (4 Columns) */}
-        <div className="md:col-span-4 space-y-4">
-          <div className="bg-surface border border-surface-border rounded-2xl p-5 shadow-xl">
+          {/* Graveyard */}
+          <div className="bg-surface border border-surface-border rounded-2xl p-4 sm:p-5 shadow-xl">
             <div className="flex items-center gap-2 mb-3">
               <Skull className="w-4 h-4 text-red-500" />
-              <h3 className="font-gothic font-bold text-slate-900 dark:text-slate-100">
+              <h3 className="font-gothic font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base">
                 {t('day.graveyardTitle', { count: deadPlayers.length })}
               </h3>
             </div>
 
             {deadPlayers.length > 0 ? (
-              <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1">
                 {deadPlayers.map((p) => {
                   const roleDef = (p.role && ROLES[p.role]) ? ROLES[p.role] : ROLES.Villager;
                   const localizedRoleName = t(`roles.${roleDef.id}.name`) || roleDef.name;
@@ -144,13 +144,13 @@ export default function DayPhase() {
                   return (
                     <div
                       key={p.id}
-                      className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between opacity-80"
+                      className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between opacity-80"
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 truncate">
                         <span>💀</span>
-                        <span className="font-medium text-slate-700 dark:text-slate-300 line-through">{p.name}</span>
+                        <span className="font-medium text-slate-700 dark:text-slate-300 line-through truncate">{p.name}</span>
                       </div>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                      <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono ml-1 flex-shrink-0">
                         {localizedRoleName}
                       </span>
                     </div>
@@ -158,11 +158,16 @@ export default function DayPhase() {
                 })}
               </div>
             ) : (
-              <p className="text-xs text-slate-500 py-4 text-center">
+              <p className="text-xs text-slate-500 py-2 text-center">
                 {t('day.graveyardEmpty')}
               </p>
             )}
           </div>
+        </div>
+
+        {/* Right Column: Real-Time Town Square Chat (6 Cols) */}
+        <div className="lg:col-span-6">
+          <TownChat />
         </div>
       </div>
 

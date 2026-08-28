@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
-import { Vote, Check, Skull, Ban, ShieldCheck } from 'lucide-react';
+import { Vote, Check, Skull, Ban, MessageSquare } from 'lucide-react';
+import TownChat from '@/components/game/TownChat';
 
 export default function VotingPhase() {
   const { room, players, me, isHost, votes, submitVote, resolveVoting, loading } = useGame();
   const { t } = useTranslation();
+  const [showChat, setShowChat] = useState<boolean>(false);
 
   if (!room || !me) return null;
 
@@ -181,6 +183,24 @@ export default function VotingPhase() {
           {t('voting.waitingHost')}
         </div>
       )}
+
+      {/* Optional Village Discussion Chat in Voting Phase */}
+      <div className="space-y-3 pt-2">
+        <button
+          type="button"
+          onClick={() => setShowChat(!showChat)}
+          className="w-full py-2.5 px-4 rounded-xl bg-surface-light border border-slate-200 dark:border-slate-800 hover:border-indigo-400 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
+        >
+          <MessageSquare className="w-4 h-4 text-indigo-500" />
+          <span>{showChat ? t('voting.toggleChatHide') : t('voting.toggleChatShow')}</span>
+        </button>
+
+        {showChat && (
+          <div className="animate-slide-up">
+            <TownChat />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

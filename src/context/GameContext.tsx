@@ -13,7 +13,8 @@ import {
   resolveNightPhase,
   submitVote,
   resolveVotingPhase,
-  resetToLobby
+  resetToLobby,
+  sendChatMessage
 } from '@/services/gameEngine';
 import { DEFAULT_PRESETS, ROLES } from '@/config/roles';
 import {
@@ -62,6 +63,7 @@ interface GameContextValue {
   advanceToVoting: () => Promise<void>;
   submitVote: (targetId: string | null, isRetract?: boolean) => Promise<void>;
   resolveVoting: () => Promise<void>;
+  sendChatMessage: (message: string) => Promise<void>;
   resetToLobby: () => Promise<void>;
   refreshRoomData: (roomId: string) => Promise<void>;
 }
@@ -398,7 +400,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // 15. Reset Back to Lobby (Host only)
+  // 15. Send Player Chat Message
+  const handleSendChatMessage = async (message: string): Promise<void> => {
+    if (!room || !me) return;
+    sound.playClick();
+    await sendChatMessage(room.id, room.round, me.id, me.name, me.avatar, message);
+  };
+
+  // 16. Reset Back to Lobby (Host only)
   const handleResetToLobby = async (): Promise<void> => {
     if (!room || !isHost) return;
     await resetToLobby(room.id);
@@ -436,6 +445,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     advanceToVoting: handleAdvanceToVoting,
     submitVote: handleVote,
     resolveVoting: handleResolveVoting,
+    sendChatMessage: handleSendChatMessage,
     resetToLobby: handleResetToLobby,
     refreshRoomData
   };

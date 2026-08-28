@@ -148,6 +148,9 @@ export interface GameLog {
   round: number;
   message: string;
   type: GameLogType;
+  sender_id?: string | null;
+  sender_name?: string | null;
+  sender_avatar?: string | null;
   target_role?: string | null;
   created_at?: string;
 }
