@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { X, Database, Key, Check, Copy, AlertCircle, RefreshCw, Globe, Sun, Moon, ExternalLink, Code2, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Database, Key, Check, AlertCircle, RefreshCw, Globe, Sun, Moon, ExternalLink, FileCode } from 'lucide-react';
 import { getSupabaseCredentials, saveSupabaseCredentials } from '@/lib/supabase';
-import { SUPABASE_SQL_SCHEMA } from '@/config/sqlSchema';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -16,8 +15,6 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { theme, setTheme } = useTheme();
   const [url, setUrl] = useState<string>(currentCreds.url);
   const [key, setKey] = useState<string>(currentCreds.key);
-  const [copiedSql, setCopiedSql] = useState<boolean>(false);
-  const [showSqlViewer, setShowSqlViewer] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -26,11 +23,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     saveSupabaseCredentials(url.trim(), key.trim());
   };
 
-  const handleCopySql = () => {
-    navigator.clipboard.writeText(SUPABASE_SQL_SCHEMA);
-    setCopiedSql(true);
-    setTimeout(() => setCopiedSql(false), 2500);
-  };
+  const githubSchemaUrl = 'https://github.com/AtaCanYmc/pocket-werewolf/blob/main/supabase/schema.sql';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
@@ -174,11 +167,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </button>
           </form>
 
-          {/* Database Setup & SQL Schema Downloader */}
+          {/* Database Setup & GitHub SQL Schema Navigation */}
           <div className="bg-surface-light border border-slate-300 dark:border-slate-800 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <Code2 className="w-4 h-4 text-indigo-500" />
+                <FileCode className="w-4 h-4 text-indigo-500" />
                 <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{t('modals.sqlTitle')}</span>
               </div>
               <a
@@ -196,39 +189,19 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               {t('modals.sqlSub')}
             </p>
 
-            {/* Quick Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-1">
-              <button
-                type="button"
-                onClick={handleCopySql}
-                className={`flex-1 py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border ${
-                  copiedSql
-                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-glow'
-                    : 'bg-indigo-600 hover:bg-indigo-500 text-white border-indigo-500 shadow-mystic-glow'
-                }`}
+            {/* Direct GitHub Link Button */}
+            <div className="pt-1">
+              <a
+                href={githubSchemaUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all border border-slate-700 shadow-md active:scale-98"
               >
-                {copiedSql ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                <span>{copiedSql ? t('modals.sqlCopied') : t('modals.copyFullSql')}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowSqlViewer(!showSqlViewer)}
-                className="py-2 px-3 rounded-xl bg-surface border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-medium flex items-center justify-center gap-1 transition-all"
-              >
-                <span>{showSqlViewer ? t('modals.hideSql') : t('modals.viewSql')}</span>
-                {showSqlViewer ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-              </button>
+                <FileCode className="w-4 h-4 text-indigo-400" />
+                <span>{t('modals.viewOnGithub')}</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+              </a>
             </div>
-
-            {/* Collapsible SQL Viewer Drawer */}
-            {showSqlViewer && (
-              <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-800 animate-slide-up">
-                <pre className="p-3 bg-slate-950 text-slate-200 rounded-xl text-[11px] font-mono overflow-x-auto max-h-52 select-all border border-slate-800 leading-relaxed">
-                  {SUPABASE_SQL_SCHEMA}
-                </pre>
-              </div>
-            )}
           </div>
         </div>
 
