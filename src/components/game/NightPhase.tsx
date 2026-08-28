@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
-import { Moon, Skull, Eye, Heart, Sparkles, Check, Sun } from 'lucide-react';
+import { Moon, Skull, Eye, Heart, Sparkles, Check, Sun, Ban } from 'lucide-react';
 import { ROLES } from '@/config/roles';
 import DreamMathMinigame from '@/components/game/DreamMathMinigame';
 import { checkNightActionsStatus } from '@/services/gameEngine';
@@ -153,11 +153,38 @@ export default function NightPhase() {
                 </button>
               );
             })}
+
+            {/* Werewolf Skip / Pass Card */}
+            <button
+              type="button"
+              onClick={() => submitNightAction('werewolf_kill', null, { isPass: true })}
+              className={`p-3 rounded-xl border flex items-center justify-between transition-all active:scale-95 col-span-1 sm:col-span-2 ${
+                myAction?.action_type === 'werewolf_kill' && myAction?.target_id === null
+                  ? 'bg-amber-950 text-white border-amber-500 shadow-md ring-2 ring-amber-500/50'
+                  : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-amber-500/50 text-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-500 font-bold">
+                  <Ban className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <span className="text-sm font-bold font-gothic block">{t('night.skipActionTitle')}</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('night.skipActionSubtitle')}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 uppercase">
+                  {t('night.skipBadge')}
+                </span>
+                {myAction?.action_type === 'werewolf_kill' && myAction?.target_id === null && <Check className="w-4 h-4 text-amber-400" />}
+              </div>
+            </button>
           </div>
         </div>
       ) : me.role === 'Seer' ? (
         // 🔮 Seer View
-        <div className="bg-surface border border-indigo-500/30 dark:border-indigo-900/40 rounded-2xl p-6 shadow-mystic-glow space-y-4">
+        <div className="bg-surface border border-indigo-500/30 dark:border-indigo-900/40 rounded-2xl p-4 sm:p-6 shadow-mystic-glow space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Eye className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
@@ -192,6 +219,37 @@ export default function NightPhase() {
                 </button>
               );
             })}
+
+            {/* Seer Skip / Pass Card */}
+            <button
+              type="button"
+              onClick={() => {
+                setSeerResult({ targetId: '', targetName: t('night.passLabel'), isEvil: false, roleName: t('night.passSkipped') });
+                submitNightAction('seer_inspect', null, { isPass: true });
+              }}
+              disabled={Boolean(seerResult)}
+              className={`p-3 rounded-xl border flex items-center justify-between transition-all active:scale-95 col-span-1 sm:col-span-2 ${
+                myAction?.action_type === 'seer_inspect' && myAction?.target_id === null
+                  ? 'bg-amber-950 text-white border-amber-500 shadow-md ring-2 ring-amber-500/50'
+                  : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-amber-500/50 text-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-500 font-bold">
+                  <Ban className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <span className="text-sm font-bold font-gothic block">{t('night.skipActionTitle')}</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('night.skipActionSubtitle')}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 uppercase">
+                  {t('night.skipBadge')}
+                </span>
+                {myAction?.action_type === 'seer_inspect' && myAction?.target_id === null && <Check className="w-4 h-4 text-amber-400" />}
+              </div>
+            </button>
           </div>
 
           {seerResult && (
@@ -205,7 +263,13 @@ export default function NightPhase() {
               <Sparkles className="w-6 h-6 flex-shrink-0" />
               <div>
                 <p className="font-gothic font-bold text-sm">
-                  {t('night.seerResultTitle')} <strong>{seerResult.targetName}</strong> {t('night.seerResultIs')} <strong>{seerResult.roleName}</strong>!
+                  {seerResult.targetId ? (
+                    <>
+                      {t('night.seerResultTitle')} <strong>{seerResult.targetName}</strong> {t('night.seerResultIs')} <strong>{seerResult.roleName}</strong>!
+                    </>
+                  ) : (
+                    <span>{t('night.skipActionTitle')} ({t('night.passSkipped')})</span>
+                  )}
                 </p>
                 <p className="text-xs opacity-80 mt-0.5">
                   {t('night.seerHint')}
@@ -216,7 +280,7 @@ export default function NightPhase() {
         </div>
       ) : me.role === 'Doctor' ? (
         // 💉 Doctor View
-        <div className="bg-surface border border-cyan-500/30 dark:border-cyan-900/40 rounded-2xl p-6 shadow-mystic-glow space-y-4">
+        <div className="bg-surface border border-cyan-500/30 dark:border-cyan-900/40 rounded-2xl p-4 sm:p-6 shadow-mystic-glow space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
@@ -254,11 +318,38 @@ export default function NightPhase() {
                 </button>
               );
             })}
+
+            {/* Doctor Skip / Pass Card */}
+            <button
+              type="button"
+              onClick={() => submitNightAction('doctor_heal', null, { isPass: true })}
+              className={`p-3 rounded-xl border flex items-center justify-between transition-all active:scale-95 col-span-1 sm:col-span-2 ${
+                myAction?.action_type === 'doctor_heal' && myAction?.target_id === null
+                  ? 'bg-amber-950 text-white border-amber-500 shadow-md ring-2 ring-amber-500/50'
+                  : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-amber-500/50 text-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-500 font-bold">
+                  <Ban className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <span className="text-sm font-bold font-gothic block">{t('night.skipActionTitle')}</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">{t('night.skipActionSubtitle')}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 uppercase">
+                  {t('night.skipBadge')}
+                </span>
+                {myAction?.action_type === 'doctor_heal' && myAction?.target_id === null && <Check className="w-4 h-4 text-amber-400" />}
+              </div>
+            </button>
           </div>
         </div>
       ) : me.role === 'Witch' ? (
         // 🧙‍♀️ Witch View
-        <div className="bg-surface border border-purple-500/30 dark:border-purple-900/40 rounded-2xl p-6 shadow-mystic-glow space-y-4">
+        <div className="bg-surface border border-purple-500/30 dark:border-purple-900/40 rounded-2xl p-4 sm:p-6 shadow-mystic-glow space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-purple-500 dark:text-purple-400" />
@@ -285,6 +376,28 @@ export default function NightPhase() {
                     {witchPoisonTarget === p.id && <Check className="w-4 h-4 text-purple-400" />}
                   </button>
                 ))}
+
+                {/* Witch Skip / Pass Card */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setWitchPoisonTarget(null);
+                    submitNightAction('witch_kill', null, { isPass: true });
+                  }}
+                  className={`p-2.5 rounded-xl border flex items-center justify-between transition-all active:scale-95 col-span-1 sm:col-span-2 ${
+                    myAction?.action_type === 'witch_kill' && myAction?.target_id === null
+                      ? 'bg-amber-950 text-white border-amber-500 shadow-md ring-2 ring-amber-500/50'
+                      : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-amber-500/50 text-slate-800 dark:text-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Ban className="w-4 h-4 text-amber-500" />
+                    <span className="text-xs font-bold font-gothic">{t('night.skipActionTitle')}</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 uppercase">
+                    {t('night.skipBadge')}
+                  </span>
+                </button>
               </div>
             </div>
           </div>
