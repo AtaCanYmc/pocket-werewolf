@@ -55,12 +55,9 @@ export async function cleanupStaleRooms(): Promise<void> {
 }
 
 /**
- * Checks if Supabase (or environment fallback) requires an admin password to create a room.
+ * Checks if Supabase requires an admin password to create a room.
  */
 export async function checkAdminPasswordRequired(): Promise<boolean> {
-  const envPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined)?.trim() || '';
-  if (envPassword) return true;
-
   const supabase = getSupabase();
   if (!supabase) return false;
 
@@ -74,14 +71,9 @@ export async function checkAdminPasswordRequired(): Promise<boolean> {
 }
 
 /**
- * Verifies the provided admin password securely in Supabase PostgreSQL (or env fallback).
+ * Verifies the provided admin password securely in Supabase PostgreSQL via RPC.
  */
 export async function verifyAdminPassword(password: string): Promise<boolean> {
-  const envPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined)?.trim() || '';
-  if (envPassword) {
-    return password.trim() === envPassword;
-  }
-
   const supabase = getSupabase();
   if (!supabase) return true;
 
