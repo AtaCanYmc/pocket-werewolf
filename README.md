@@ -248,6 +248,58 @@ For detailed deployment instructions and custom domain setup, read [`docs/DEPLOY
 
 ---
 
+## ❓ Frequently Asked Questions (FAQ)
+
+<details>
+<summary><b>1. What happens to rooms that are created but never started (abandoned lobbies)?</b></summary>
+<br>
+
+Pocket Werewolf features an automated **3-Tier Garbage Collection & Lifecycle System**:
+1. **Host Departure Cleanup:** When the room host leaves a lobby without other active players, the room is deleted immediately (`DELETE FROM public.rooms`). Thanks to PostgreSQL `ON DELETE CASCADE`, all related player rows, action records, votes, and game logs are purged simultaneously.
+2. **Opportunistic Client Cleanup:** Every time a new room is created or joined, a background task automatically purges unstarted lobbies older than **6 hours** and finished matches older than **24 hours**.
+3. **Database Stored Procedure:** A PostgreSQL function (`cleanup_stale_rooms()`) defined in [`supabase/schema.sql`](./supabase/schema.sql) can be scheduled via `pg_cron` for automated batch maintenance.
+</details>
+
+<details>
+<summary><b>2. How does multiplayer synchronization work without a backend Node.js server?</b></summary>
+<br>
+
+The application operates on a **Serverless BaaS (Backend-as-a-Service)** architecture powered by **Supabase**. Client state changes (player joins, night actions, votes, phase transitions) are written directly to PostgreSQL using Row Level Security (RLS) policies and broadcast across all connected clients via **Supabase Realtime WebSocket Channels** with `< 50ms` latency.
+</details>
+
+<details>
+<summary><b>3. Do players need to download or install an app from an App Store?</b></summary>
+<br>
+
+No! Pocket Werewolf is a **Progressive Web Application (PWA)**. Players can open the link in any mobile or desktop browser (Safari, Chrome, Firefox, Edge). They can also tap **"Add to Home Screen"** to install it as a standalone, fullscreen app with offline caching and native app feel.
+</details>
+
+<details>
+<summary><b>4. How do players join a game room?</b></summary>
+<br>
+
+Players can join a match in three simple ways:
+- **QR Code Scan:** Scan the dynamic QR code displayed on the host's screen using their phone camera.
+- **Direct Link:** Tap a shared WhatsApp / Telegram / Discord invite link with the room code pre-filled (`/?code=ABCD`).
+- **Room Code:** Enter the 4-letter room code manually on the home screen.
+</details>
+
+<details>
+<summary><b>5. How is audio synthesized without large MP3/WAV downloads?</b></summary>
+<br>
+
+Pocket Werewolf uses the **HTML5 Web Audio API** to generate rich, atmospheric sound effects procedurally (wolf howls, church bells, death gongs, and victory chords) entirely in the browser's audio synthesizer, resulting in **zero network audio download overhead**.
+</details>
+
+<details>
+<summary><b>6. Can I host my own private instance for my community or organization?</b></summary>
+<br>
+
+Yes! You can click the **[Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAtaCanYmc%2Fpocket-werewolf)** button, create a free project at [supabase.com](https://supabase.com), run [`supabase/schema.sql`](./supabase/schema.sql), and have your own private instance running with zero hosting costs.
+</details>
+
+---
+
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/AtaCanYmc/pocket-werewolf/issues).
