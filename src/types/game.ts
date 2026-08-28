@@ -131,7 +131,7 @@ export interface Vote {
   room_id: string;
   round: number;
   voter_id: string;
-  target_id: string;
+  target_id: string | null;
   created_at?: string;
 }
 

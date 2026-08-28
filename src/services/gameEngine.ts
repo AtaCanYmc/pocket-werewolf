@@ -529,13 +529,14 @@ export async function advanceToVoting(roomId: string, round: number): Promise<vo
 }
 
 /**
- * 9. Submits a vote.
+ * 9. Submits a vote (targetId: string for player, null for Blank/Skip vote, or isRetract to remove vote).
  */
 export async function submitVote(
   roomId: string,
   round: number,
   voterId: string,
-  targetId: string | null
+  targetId: string | null,
+  isRetract: boolean = false
 ): Promise<void> {
   const supabase = getSupabase();
   if (!supabase) return;
@@ -548,13 +549,16 @@ export async function submitVote(
     .eq('voter_id', voterId)
     .maybeSingle();
 
-  if (existing) {
-    if (targetId === null) {
+  if (isRetract) {
+    if (existing) {
       await supabase.from('votes').delete().eq('id', existing.id);
-    } else {
-      await supabase.from('votes').update({ target_id: targetId }).eq('id', existing.id);
     }
-  } else if (targetId !== null) {
+    return;
+  }
+
+  if (existing) {
+    await supabase.from('votes').update({ target_id: targetId }).eq('id', existing.id);
+  } else {
     await supabase.from('votes').insert([
       {
         room_id: roomId,
@@ -579,8 +583,14 @@ export async function resolveVotingPhase(
   if (!supabase) return;
 
   const voteCounts: Record<string, number> = {};
+  let skipVotes = 0;
+
   votes.forEach(v => {
-    voteCounts[v.target_id] = (voteCounts[v.target_id] || 0) + 1;
+    if (v.target_id === null) {
+      skipVotes++;
+    } else {
+      voteCounts[v.target_id] = (voteCounts[v.target_id] || 0) + 1;
+    }
   });
 
   let maxVotes = 0;
@@ -599,7 +609,17 @@ export async function resolveVotingPhase(
 
   let updatedPlayers = [...players];
 
-  if (isTie || !targetIdToLynch || maxVotes === 0) {
+  if (skipVotes >= maxVotes && skipVotes > 0) {
+    // Village majority voted to skip/pass execution
+    await supabase.from('game_logs').insert([
+      {
+        room_id: roomId,
+        round,
+        message: `⚖️ The village voted to skip execution (${skipVotes} pass votes). No one was executed today!`,
+        type: 'lynch'
+      }
+    ]);
+  } else if (isTie || !targetIdToLynch || maxVotes === 0) {
     await supabase.from('game_logs').insert([
       {
         room_id: roomId,

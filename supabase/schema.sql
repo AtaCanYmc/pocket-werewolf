@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS public.votes (
     room_id UUID NOT NULL REFERENCES public.rooms(id) ON DELETE CASCADE,
     round INT NOT NULL,
     voter_id UUID NOT NULL REFERENCES public.players(id) ON DELETE CASCADE,
-    target_id UUID NOT NULL REFERENCES public.players(id) ON DELETE CASCADE,
+    target_id UUID REFERENCES public.players(id) ON DELETE CASCADE, -- NULL indicates a Blank / Skip (Pas) vote
     created_at TIMESTAMPTZ DEFAULT now(),
     CONSTRAINT unique_voter_per_round UNIQUE (room_id, round, voter_id)
 );

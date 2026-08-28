@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
-import { Vote, Check, Skull } from 'lucide-react';
+import { Vote, Check, Skull, Ban, ShieldCheck } from 'lucide-react';
 
 export default function VotingPhase() {
   const { room, players, me, isHost, votes, submitVote, resolveVoting, loading } = useGame();
@@ -19,16 +19,33 @@ export default function VotingPhase() {
 
   // Vote tally table
   const voteTally: Record<string, number> = {};
+  let skipVoteCount = 0;
+
   roundVotes.forEach(v => {
-    voteTally[v.target_id] = (voteTally[v.target_id] || 0) + 1;
+    if (v.target_id === null) {
+      skipVoteCount++;
+    } else {
+      voteTally[v.target_id] = (voteTally[v.target_id] || 0) + 1;
+    }
   });
 
-  const handleCastVote = (targetId: string) => {
+  const isMyVoteSkip = Boolean(myVote && myVote.target_id === null);
+
+  const handleCastPlayerVote = (targetId: string) => {
     if (!isAlive) return;
     if (myVote?.target_id === targetId) {
-      submitVote(null); // Retract vote
+      submitVote(null, true); // Retract vote completely
     } else {
-      submitVote(targetId);
+      submitVote(targetId, false);
+    }
+  };
+
+  const handleCastSkipVote = () => {
+    if (!isAlive) return;
+    if (isMyVoteSkip) {
+      submitVote(null, true); // Retract skip vote completely
+    } else {
+      submitVote(null, false); // Cast explicit skip/blank vote
     }
   };
 
@@ -55,7 +72,49 @@ export default function VotingPhase() {
         </div>
       </div>
 
-      {/* Voting Target List */}
+      {/* Special Blank / Skip Vote Option */}
+      <div className="w-full">
+        <button
+          type="button"
+          onClick={handleCastSkipVote}
+          disabled={!isAlive}
+          className={`w-full p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] shadow-sm ${
+            isMyVoteSkip
+              ? 'bg-amber-50 dark:bg-amber-950/80 text-amber-900 dark:text-amber-100 border-amber-500 shadow-md ring-2 ring-amber-500/50'
+              : 'bg-surface-light border-slate-300 dark:border-slate-800 hover:border-amber-500/60 text-slate-800 dark:text-slate-200'
+          }`}
+        >
+          <div className="flex items-center gap-3.5">
+            <div className={`p-2.5 rounded-xl ${isMyVoteSkip ? 'bg-amber-500 text-white' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'}`}>
+              <Ban className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm sm:text-base font-bold font-gothic block">
+                  {t('voting.skipVoteTitle')}
+                </span>
+                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">
+                  {t('voting.skipVoteBadge')}
+                </span>
+              </div>
+              <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
+                {isMyVoteSkip ? t('voting.yourSkipVote') : t('voting.skipVoteSubtitle')}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {skipVoteCount > 0 && (
+              <span className="px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold shadow-inner">
+                {t('voting.votesBadge', { count: skipVoteCount })}
+              </span>
+            )}
+            {isMyVoteSkip && <Check className="w-5 h-5 text-amber-500 dark:text-amber-400" />}
+          </div>
+        </button>
+      </div>
+
+      {/* Voting Target Player Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         {alivePlayers.map((p) => {
           const isSelected = myVote?.target_id === p.id;
@@ -65,11 +124,11 @@ export default function VotingPhase() {
           return (
             <button
               key={p.id}
-              onClick={() => handleCastVote(p.id)}
+              onClick={() => handleCastPlayerVote(p.id)}
               disabled={!isAlive}
               className={`p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] ${
                 isSelected
-                  ? 'bg-red-950 text-white border-red-500 shadow-blood-glow'
+                  ? 'bg-red-950 text-white border-red-500 shadow-blood-glow ring-2 ring-red-500/50'
                   : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 text-slate-900 dark:text-slate-100'
               }`}
             >

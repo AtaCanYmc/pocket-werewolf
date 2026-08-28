@@ -60,7 +60,7 @@ interface GameContextValue {
   resolveNight: () => Promise<void>;
   advanceToDay: () => Promise<void>;
   advanceToVoting: () => Promise<void>;
-  submitVote: (targetId: string | null) => Promise<void>;
+  submitVote: (targetId: string | null, isRetract?: boolean) => Promise<void>;
   resolveVoting: () => Promise<void>;
   resetToLobby: () => Promise<void>;
   refreshRoomData: (roomId: string) => Promise<void>;
@@ -376,10 +376,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
   };
 
   // 13. Cast Vote
-  const handleVote = async (targetId: string | null): Promise<void> => {
+  const handleVote = async (targetId: string | null, isRetract: boolean = false): Promise<void> => {
     if (!room || !me) return;
     sound.playClick();
-    await submitVote(room.id, room.round, me.id, targetId);
+    await submitVote(room.id, room.round, me.id, targetId, isRetract);
   };
 
   // 14. Resolve Voting Results (Host only)
