@@ -37,45 +37,44 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
   };
 
   return (
-    <header className="w-full bg-surface/90 backdrop-blur-md border-b border-surface-border sticky top-0 z-40 px-3 sm:px-4 py-2.5 sm:py-3 transition-colors duration-300">
-      <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
+    <header className="w-full bg-surface/95 backdrop-blur-md border-b border-surface-border sticky top-0 z-40 px-2.5 sm:px-4 py-2 sm:py-3 transition-colors duration-300">
+      <div className="max-w-5xl mx-auto flex items-center justify-between gap-1.5 sm:gap-2">
         {/* Logo & Brand */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blood/20 border border-blood/40 flex items-center justify-center text-lg sm:text-xl shadow-blood-glow flex-shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-shrink truncate">
+          <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-blood/20 border border-blood/40 flex items-center justify-center text-base sm:text-xl shadow-blood-glow flex-shrink-0">
             🐺
           </div>
-          <div>
-            <h1 className="font-gothic font-bold text-base sm:text-lg tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1.5 leading-tight">
-              <span>{t('app.title')}</span>
-              <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-blood/20 dark:bg-blood/30 border border-blood/40 text-blood font-sans font-semibold">
+          <div className="min-w-0 truncate">
+            <h1 className="font-gothic font-bold text-xs sm:text-base tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1 leading-tight truncate">
+              <span className="truncate">{t('app.title')}</span>
+              <span className="text-[8px] sm:text-[10px] px-1 py-0.5 rounded bg-blood/20 dark:bg-blood/30 border border-blood/40 text-blood font-sans font-semibold hidden md:inline-flex flex-shrink-0">
                 {t('app.pwaBadge')}
               </span>
             </h1>
-            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-sans hidden md:block">Realtime Werewolf PWA</p>
           </div>
         </div>
 
         {/* Room Code Badge (When inside an active room) */}
         {room?.code && (
-          <div className="flex items-center gap-1 sm:gap-2 bg-surface-light border border-slate-300 dark:border-slate-700/60 rounded-xl px-2 sm:px-3 py-1 sm:py-1.5 shadow-inner">
-            <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-mono hidden xs:inline">{t('header.room')}</span>
-            <span className="text-xs sm:text-sm font-bold font-mono tracking-widest text-blood">{room.code}</span>
+          <div className="flex items-center gap-1 sm:gap-1.5 bg-surface-light border border-slate-300 dark:border-slate-700/60 rounded-xl px-1.5 sm:px-2.5 py-0.5 sm:py-1 shadow-inner flex-shrink-0">
+            <span className="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400 font-mono hidden md:inline">{t('header.room')}</span>
+            <span className="text-xs sm:text-sm font-bold font-mono tracking-wider text-blood">{room.code}</span>
             <button
               onClick={handleCopyCode}
               title={t('header.copyCode')}
               aria-label={t('header.copyCode')}
-              className="p-1 hover:text-slate-900 dark:hover:text-white text-slate-500 dark:text-slate-400 transition-colors rounded active:scale-95"
+              className="p-1 hover:text-slate-900 dark:hover:text-white text-slate-500 dark:text-slate-400 transition-colors rounded active:scale-90"
             >
-              {copied ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+              {copied ? <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-500" /> : <Copy className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
             </button>
             {onOpenShare && (
               <button
                 onClick={onOpenShare}
                 title={t('header.share')}
                 aria-label={t('header.share')}
-                className="p-1 hover:text-slate-900 dark:hover:text-white text-slate-500 dark:text-slate-400 transition-colors rounded active:scale-95"
+                className="p-1 hover:text-slate-900 dark:hover:text-white text-slate-500 dark:text-slate-400 transition-colors rounded active:scale-90"
               >
-                <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Share2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </button>
             )}
           </div>
@@ -83,12 +82,12 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
 
         {/* Action Controls */}
         <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
-          {/* Theme Toggle (Dark / Light) */}
+          {/* Theme Toggle (Dark / Light - visible on sm screens) */}
           <button
             onClick={toggleTheme}
             title={theme === 'dark' ? t('header.lightMode') : t('header.darkMode')}
             aria-label={t('header.themeToggle')}
-            className="p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
+            className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
           </button>
@@ -99,9 +98,9 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
               onClick={() => setShowLangMenu(!showLangMenu)}
               title={t('header.language')}
               aria-label={t('header.language')}
-              className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 text-xs font-semibold transition-all active:scale-95"
+              className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 text-xs font-semibold transition-all active:scale-95"
             >
-              <span className="text-sm sm:text-base leading-none">{currentLanguageMeta.flag}</span>
+              <span className="text-sm leading-none">{currentLanguageMeta.flag}</span>
               <span className="hidden sm:inline font-mono uppercase text-[11px]">{language}</span>
             </button>
 
@@ -138,7 +137,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
             aria-label={t('header.guide')}
             className="p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
           >
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Sound Toggle */}
@@ -152,7 +151,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
                 : 'bg-surface-light border-slate-300 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            {soundEnabled ? <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
           </button>
 
           {/* Settings Modal */}
@@ -162,7 +161,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
             aria-label={t('header.settings')}
             className="p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Leave Room */}
@@ -175,9 +174,9 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
               }}
               title={t('header.leave')}
               aria-label={t('header.leave')}
-              className="p-1.5 sm:p-2 rounded-xl bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/40 transition-all active:scale-95 ml-0.5"
+              className="p-1.5 sm:p-2 rounded-xl bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/40 transition-all active:scale-95"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           )}
         </div>
