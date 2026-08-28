@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
-import { Play, Plus, ArrowRight, Shield, Sparkles, Smartphone, Users } from 'lucide-react';
+import { Play, Plus, ArrowRight, Shield, Sparkles, Smartphone, Users, Lock } from 'lucide-react';
 import { AVATARS } from '@/utils/session';
 
 interface HomeProps {
@@ -17,6 +17,12 @@ export default function Home({ onOpenSettings }: HomeProps) {
   const [joinCode, setJoinCode] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'create' | 'join'>('create');
   const [showAvatarPicker, setShowAvatarPicker] = useState<boolean>(false);
+
+  // Admin password configuration check
+  const configuredAdminPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined)?.trim() || '';
+  const requiresAdminPassword = Boolean(configuredAdminPassword);
+  const [adminPasswordInput, setAdminPasswordInput] = useState<string>(() => sessionStorage.getItem('PW_ADMIN_PASSWORD') || '');
+  const [adminPasswordError, setAdminPasswordError] = useState<string | null>(null);
 
   // If URL contains `?code=ABCD`, auto-populate code and switch to join tab
   useEffect(() => {
@@ -38,6 +44,16 @@ export default function Home({ onOpenSettings }: HomeProps) {
       onOpenSettings();
       return;
     }
+
+    if (requiresAdminPassword) {
+      if (adminPasswordInput.trim() !== configuredAdminPassword) {
+        setAdminPasswordError(t('home.adminPasswordError'));
+        return;
+      }
+      sessionStorage.setItem('PW_ADMIN_PASSWORD', adminPasswordInput.trim());
+      setAdminPasswordError(null);
+    }
+
     updateProfile(name, avatar);
     await createRoom();
   };
@@ -175,6 +191,32 @@ export default function Home({ onOpenSettings }: HomeProps) {
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-center px-2">
               {t('home.createSubtitle')}
             </p>
+
+            {/* Admin Password Field (If Configured in Environment) */}
+            {requiresAdminPassword && (
+              <div className="space-y-1.5 text-left animate-slide-up">
+                <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-amber-500" />
+                  <span>{t('home.adminPasswordLabel')}</span>
+                </label>
+                <input
+                  type="password"
+                  value={adminPasswordInput}
+                  onChange={(e) => {
+                    setAdminPasswordInput(e.target.value);
+                    if (adminPasswordError) setAdminPasswordError(null);
+                  }}
+                  placeholder={t('home.adminPasswordPlaceholder')}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-blood focus:ring-1 focus:ring-blood font-mono"
+                />
+                {adminPasswordError && (
+                  <p className="text-xs text-red-500 dark:text-red-400 font-medium">
+                    ⚠️ {adminPasswordError}
+                  </p>
+                )}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading}

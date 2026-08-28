@@ -58,6 +58,9 @@ export const translations: Record<LanguageCode, any> = {
       serverlessCardSub: 'Zero Cost BaaS',
       supabaseWarning: 'Supabase connection is not configured yet. Click to configure.',
       setupBtn: 'Configure',
+      adminPasswordLabel: 'Admin Password (Required to Create Rooms)',
+      adminPasswordPlaceholder: 'Enter admin creation password',
+      adminPasswordError: 'Incorrect admin password! Only authorized hosts can create rooms.',
     },
     lobby: {
       title: 'Village Square Lobby',
@@ -320,6 +323,9 @@ export const translations: Record<LanguageCode, any> = {
       serverlessCardSub: 'Sıfır Maliyet BaaS',
       supabaseWarning: 'Supabase BaaS bağlantısı henüz ayarlanmadı. Ayarlamak için tıklayın.',
       setupBtn: 'Ayarla',
+      adminPasswordLabel: 'Yönetici Şifresi (Oda Açmak İçin Zorunlu)',
+      adminPasswordPlaceholder: 'Yönetici şifresini girin',
+      adminPasswordError: 'Hatalı yönetici şifresi! Sadece yetkili yöneticiler oda açabilir.',
     },
     lobby: {
       title: 'Köy Meydanı Lobisi',
@@ -582,6 +588,9 @@ export const translations: Record<LanguageCode, any> = {
       serverlessCardSub: 'BaaS sans coût',
       supabaseWarning: 'La connexion Supabase n’est pas configurée. Cliquez pour configurer.',
       setupBtn: 'Configurer',
+      adminPasswordLabel: 'Mot de passe administrateur (Requis pour créer)',
+      adminPasswordPlaceholder: 'Entrez le mot de passe administrateur',
+      adminPasswordError: 'Mot de passe administrateur incorrect !',
     },
     lobby: {
       title: 'Place du Village - Salon',
@@ -844,6 +853,9 @@ export const translations: Record<LanguageCode, any> = {
       serverlessCardSub: 'Kostenfreies BaaS',
       supabaseWarning: 'Supabase-Verbindung noch nicht konfiguriert. Zum Konfigurieren klicken.',
       setupBtn: 'Konfigurieren',
+      adminPasswordLabel: 'Admin-Passwort (Erforderlich zum Erstellen)',
+      adminPasswordPlaceholder: 'Admin-Passwort eingeben',
+      adminPasswordError: 'Falsches Admin-Passwort! Nur autorisierte Hosts können Räume erstellen.',
     },
     lobby: {
       title: 'Dorfplatz Lobby',
