@@ -17,6 +17,7 @@ const VotingPhase = lazy(() => import('@/components/game/VotingPhase'));
 const GameOverPhase = lazy(() => import('@/components/game/GameOverPhase'));
 const SettingsModal = lazy(() => import('@/components/modals/SettingsModal'));
 const RoleGuideModal = lazy(() => import('@/components/modals/RoleGuideModal'));
+const PwaGuideModal = lazy(() => import('@/components/modals/PwaGuideModal'));
 const ShareModal = lazy(() => import('@/components/modals/ShareModal'));
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
   const { showError } = useToast();
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
+  const [isPwaGuideOpen, setIsPwaGuideOpen] = useState<boolean>(false);
   const [isShareOpen, setIsShareOpen] = useState<boolean>(false);
 
   // Sync game engine / network errors with Toast notification system
@@ -41,6 +43,7 @@ export default function App() {
         <Home
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenGuide={() => setIsGuideOpen(true)}
+          onOpenPwaGuide={() => setIsPwaGuideOpen(true)}
         />
       );
     }
@@ -93,6 +96,7 @@ export default function App() {
       <Suspense fallback={null}>
         {isSettingsOpen && <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />}
         {isGuideOpen && <RoleGuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />}
+        {isPwaGuideOpen && <PwaGuideModal isOpen={isPwaGuideOpen} onClose={() => setIsPwaGuideOpen(false)} />}
         {isShareOpen && <ShareModal isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />}
       </Suspense>
     </div>
