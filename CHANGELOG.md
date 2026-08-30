@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.5.0...pocket-werewolf-v2.6.0) (2026-08-30)
+
+
+### ✨ Features
+
+* **docs:** add humans.txt, llms.txt, robots.txt, security.txt, and sitemap.xml for project documentation and SEO ([adfe45c](https://github.com/AtaCanYmc/pocket-werewolf/commit/adfe45c4b127a86bbcee0ec095fa6538ca1ebe71))
+* **Header:** update role guide button for mobile compatibility and adjust icon size ([d00da4e](https://github.com/AtaCanYmc/pocket-werewolf/commit/d00da4e245fb0c992d3e09c4807dcd426724cd69))
+* **Home:** add guide button for easy access to role and rules information ([53fe8c9](https://github.com/AtaCanYmc/pocket-werewolf/commit/53fe8c95124e1e499924bdc1f5db9fbe74a2ca53))
+* **icons:** update icons ([1749db0](https://github.com/AtaCanYmc/pocket-werewolf/commit/1749db05bbf1b116a7af7c9768a4482629580bb9))
+* **manifest:** add web app manifest and update favicon links ([e7618ff](https://github.com/AtaCanYmc/pocket-werewolf/commit/e7618ffab775e21bf22da52be91d37df175194f4))
+* **PwaGuideModal:** add PWA installation guide modal and integrate with Home component ([35e99a8](https://github.com/AtaCanYmc/pocket-werewolf/commit/35e99a82d53c93567f81724bcae202c627a0edd4))
+* **PwaGuideModal:** update icon path to use getAssetPath for improved asset management ([6d8d939](https://github.com/AtaCanYmc/pocket-werewolf/commit/6d8d939fa8f4818509a95d86c32e3cf47f17d478))
+* **RoleGuideModal:** enhance role filtering with search functionality and improve mobile layout ([f7f8bc2](https://github.com/AtaCanYmc/pocket-werewolf/commit/f7f8bc2c2c173e8c06e143768dc4c13581586c46))
+
 ## [2.5.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.4.0...pocket-werewolf-v2.5.0) (2026-08-30)
 
 
