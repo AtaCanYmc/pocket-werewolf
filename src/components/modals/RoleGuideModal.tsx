@@ -92,11 +92,11 @@ export default function RoleGuideModal({ isOpen, onClose }: RoleGuideModalProps)
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700/80 p-1 flex items-center justify-center overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded-xl bg-surface border border-surface-border p-0.5 flex items-center justify-center overflow-hidden flex-shrink-0">
                           <img
                             src={role.image}
                             alt={localizedRoleName}
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-cover rounded-lg"
                             onError={(e) => {
                               const target = e.target as HTMLElement;
                               target.style.display = 'none';
