@@ -7,6 +7,19 @@ import { Users, Vote, Pause, Play, Shield, Skull } from 'lucide-react';
 import { ROLES } from '@/config/roles';
 import { haptics } from '@/utils/haptics';
 
+/**
+ * DayPhase Component
+ * 
+ * Manages the village discussion phase where players communicate, review living vs dead players,
+ * and mark suspected werewolves before advancing to the town trial / voting phase.
+ * 
+ * Features:
+ * - Live synchronized discussion countdown timer with host pause/resume controls.
+ * - Interactive player roster with temporary local suspect toggling.
+ * - Real-time Town Square Chat integration (`TownChat`).
+ * - Graveyard list detailing eliminated villagers and their revealed roles.
+ * - Host control bar to trigger the voting trial.
+ */
 export default function DayPhase() {
   const { room, players, me, isHost, advanceToVoting } = useGame();
   const { t } = useTranslation();

@@ -3,6 +3,7 @@ import { getSupabase } from '@/lib/supabase';
 import { sound } from '@/utils/audio';
 import { logger } from '@/utils/logger';
 import { Room, Player, NightAction, Vote, GameLog, UserProfile } from '@/types/game';
+import { RealtimePostgresChangesPayload, RealtimePresenceState } from '@supabase/supabase-js';
 
 interface UseRealtimeRoomProps {
   room: Room | null;
@@ -13,7 +14,7 @@ interface UseRealtimeRoomProps {
   setNightActions: React.Dispatch<React.SetStateAction<NightAction[]>>;
   setVotes: React.Dispatch<React.SetStateAction<Vote[]>>;
   setLogs: React.Dispatch<React.SetStateAction<GameLog[]>>;
-  setOnlinePresence: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+  setOnlinePresence: React.Dispatch<React.SetStateAction<RealtimePresenceState>>;
 }
 
 export function useRealtimeRoom({
@@ -52,7 +53,7 @@ export function useRealtimeRoom({
       if (actionsData) setNightActions(actionsData);
       if (votesData) setVotes(votesData);
       if (logsData) setLogs(logsData);
-    } catch (err) {
+    } catch (err: unknown) {
       logger.error('Error refreshing room data:', err);
     }
   }, [setRoom, setPlayers, setNightActions, setVotes, setLogs]);
@@ -77,75 +78,86 @@ export function useRealtimeRoom({
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` },
-        (payload: any) => {
+        (payload: RealtimePostgresChangesPayload<Room>) => {
           if (payload.eventType === 'UPDATE' || payload.eventType === 'INSERT') {
-            setRoom(payload.new);
-            if (payload.new.status === 'night') sound.playNightFall();
-            else if (payload.new.status === 'day' || payload.new.status === 'dawn') sound.playMorningBell();
-            else if (payload.new.status === 'ended') sound.playVictory();
+            const updatedRoom = payload.new as Room;
+            setRoom(updatedRoom);
+            if (updatedRoom.status === 'night') sound.playNightFall();
+            else if (updatedRoom.status === 'day' || updatedRoom.status === 'dawn') sound.playMorningBell();
+            else if (updatedRoom.status === 'ended') sound.playVictory();
           }
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
-        (payload: any) => {
+        (payload: RealtimePostgresChangesPayload<Player>) => {
           if (payload.eventType === 'INSERT') {
+            const newPlayer = payload.new as Player;
             setPlayers(prev => {
-              const exists = prev.some(p => p.id === payload.new.id);
-              if (exists) return prev.map(p => p.id === payload.new.id ? { ...p, ...payload.new } : p);
-              return [...prev, payload.new];
+              const exists = prev.some(p => p.id === newPlayer.id);
+              if (exists) return prev.map(p => p.id === newPlayer.id ? { ...p, ...newPlayer } : p);
+              return [...prev, newPlayer];
             });
           } else if (payload.eventType === 'UPDATE') {
-            setPlayers(prev => prev.map(p => p.id === payload.new.id ? { ...p, ...payload.new } : p));
+            const updatedPlayer = payload.new as Player;
+            setPlayers(prev => prev.map(p => p.id === updatedPlayer.id ? { ...p, ...updatedPlayer } : p));
           } else if (payload.eventType === 'DELETE') {
-            setPlayers(prev => prev.filter(p => p.id !== payload.old.id));
+            const deletedPlayer = payload.old as Partial<Player>;
+            setPlayers(prev => prev.filter(p => p.id !== deletedPlayer.id));
           }
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'night_actions', filter: `room_id=eq.${roomId}` },
-        (payload: any) => {
+        (payload: RealtimePostgresChangesPayload<NightAction>) => {
           if (payload.eventType === 'INSERT') {
+            const newAction = payload.new as NightAction;
             setNightActions(prev => {
-              const exists = prev.some(a => a.id === payload.new.id);
-              if (exists) return prev.map(a => a.id === payload.new.id ? { ...a, ...payload.new } : a);
-              return [...prev, payload.new];
+              const exists = prev.some(a => a.id === newAction.id);
+              if (exists) return prev.map(a => a.id === newAction.id ? { ...a, ...newAction } : a);
+              return [...prev, newAction];
             });
           } else if (payload.eventType === 'UPDATE') {
-            setNightActions(prev => prev.map(a => a.id === payload.new.id ? { ...a, ...payload.new } : a));
+            const updatedAction = payload.new as NightAction;
+            setNightActions(prev => prev.map(a => a.id === updatedAction.id ? { ...a, ...updatedAction } : a));
           } else if (payload.eventType === 'DELETE') {
-            setNightActions(prev => prev.filter(a => a.id !== payload.old.id));
+            const deletedAction = payload.old as Partial<NightAction>;
+            setNightActions(prev => prev.filter(a => a.id !== deletedAction.id));
           }
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
-        (payload: any) => {
+        (payload: RealtimePostgresChangesPayload<Vote>) => {
           if (payload.eventType === 'INSERT') {
+            const newVote = payload.new as Vote;
             setVotes(prev => {
-              const exists = prev.some(v => v.id === payload.new.id);
-              if (exists) return prev.map(v => v.id === payload.new.id ? { ...v, ...payload.new } : v);
-              return [...prev, payload.new];
+              const exists = prev.some(v => v.id === newVote.id);
+              if (exists) return prev.map(v => v.id === newVote.id ? { ...v, ...newVote } : v);
+              return [...prev, newVote];
             });
           } else if (payload.eventType === 'UPDATE') {
-            setVotes(prev => prev.map(v => v.id === payload.new.id ? { ...v, ...payload.new } : v));
+            const updatedVote = payload.new as Vote;
+            setVotes(prev => prev.map(v => v.id === updatedVote.id ? { ...v, ...updatedVote } : v));
           } else if (payload.eventType === 'DELETE') {
-            setVotes(prev => prev.filter(v => v.id !== payload.old.id));
+            const deletedVote = payload.old as Partial<Vote>;
+            setVotes(prev => prev.filter(v => v.id !== deletedVote.id));
           }
         }
       )
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'game_logs', filter: `room_id=eq.${roomId}` },
-        (payload: any) => {
+        (payload: RealtimePostgresChangesPayload<GameLog>) => {
+          const newLog = payload.new as GameLog;
           setLogs(prev => {
-            if (prev.some(l => l.id === payload.new.id)) return prev;
-            return [...prev, payload.new];
+            if (prev.some(l => l.id === newLog.id)) return prev;
+            return [...prev, newLog];
           });
-          if (payload.new.type === 'lynch' || payload.new.type === 'night_result') {
+          if (newLog.type === 'lynch' || newLog.type === 'night_result') {
             sound.playDeathGong();
           }
         }

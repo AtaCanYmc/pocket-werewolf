@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { sound } from '@/utils/audio';
 import { logger } from '@/utils/logger';
+import { formatErrorMessage } from '@/utils/errors';
 import {
   startGame as engineStartGame,
   advanceToNight as engineAdvanceToNight,
@@ -13,7 +14,7 @@ import {
   sendChatMessage as engineSendChatMessage,
   resetToLobby as engineResetToLobby
 } from '@/services/gameEngine';
-import { Room, Player, NightAction, Vote, GameLog, NightActionType } from '@/types/game';
+import { Room, Player, NightAction, Vote, GameLog, NightActionType, NightActionResult } from '@/types/game';
 
 interface UsePhaseActionsProps {
   room: Room | null;
@@ -48,9 +49,9 @@ export function usePhaseActions({
     try {
       sound.playWolfHowl();
       await engineStartGame(room.id, room.deck, players);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to start game:', err);
-      setError(err.message || 'Failed to start game.');
+      setError(formatErrorMessage(err));
     } finally {
       setPhaseLoading(false);
     }
@@ -60,16 +61,16 @@ export function usePhaseActions({
     if (!room) return;
     try {
       await engineAdvanceToNight(room.id, room.round);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to advance to night:', err);
-      setError(err.message || 'Failed to advance to night.');
+      setError(formatErrorMessage(err));
     }
   };
 
   const handleNightAction = async (
     actionType: NightActionType,
     targetId: string | null,
-    result: any = null
+    result: NightActionResult = null
   ): Promise<void> => {
     if (!room || !me) return;
     sound.playClick();
@@ -90,7 +91,7 @@ export function usePhaseActions({
 
     try {
       await engineSubmitNightAction(room.id, room.round, me.id, actionType, targetId, result);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to submit night action:', err);
     }
   };
@@ -100,9 +101,9 @@ export function usePhaseActions({
     setPhaseLoading(true);
     try {
       await engineResolveNight(room.id, room.round, players, nightActions);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to resolve night phase:', err);
-      setError(err.message || 'Failed to resolve night phase.');
+      setError(formatErrorMessage(err));
     } finally {
       setPhaseLoading(false);
     }
@@ -112,9 +113,9 @@ export function usePhaseActions({
     if (!room) return;
     try {
       await engineAdvanceToDay(room.id, room.round);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to advance to day:', err);
-      setError(err.message || 'Failed to advance to day.');
+      setError(formatErrorMessage(err));
     }
   };
 
@@ -122,9 +123,9 @@ export function usePhaseActions({
     if (!room) return;
     try {
       await engineAdvanceToVoting(room.id, room.round);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to advance to voting:', err);
-      setError(err.message || 'Failed to advance to voting.');
+      setError(formatErrorMessage(err));
     }
   };
 
@@ -150,7 +151,7 @@ export function usePhaseActions({
 
     try {
       await engineSubmitVote(room.id, room.round, me.id, targetId, isRetract);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to submit vote:', err);
     }
   };
@@ -160,9 +161,9 @@ export function usePhaseActions({
     setPhaseLoading(true);
     try {
       await engineResolveVoting(room.id, room.round, players, votes);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to resolve voting phase:', err);
-      setError(err.message || 'Failed to resolve voting phase.');
+      setError(formatErrorMessage(err));
     } finally {
       setPhaseLoading(false);
     }
@@ -192,7 +193,7 @@ export function usePhaseActions({
 
     try {
       await engineSendChatMessage(room.id, room.round, me.id, me.name, me.avatar, clean);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to send chat message:', err);
     }
   };
@@ -201,9 +202,9 @@ export function usePhaseActions({
     if (!room || !isHost) return;
     try {
       await engineResetToLobby(room.id);
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to reset to lobby:', err);
-      setError(err.message || 'Failed to reset to lobby.');
+      setError(formatErrorMessage(err));
     }
   };
 

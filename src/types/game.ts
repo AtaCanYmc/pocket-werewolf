@@ -115,6 +115,21 @@ export type NightActionType =
   | 'witch_kill'
   | 'sorceress_inspect';
 
+export type NightActionResult = {
+  isPass?: boolean;
+  targetId?: string;
+  targetName?: string;
+  isEvil?: boolean;
+  roleName?: string;
+} | null;
+
+export interface PresenceUser {
+  sessionId: string;
+  name: string;
+  avatar: string;
+  onlineAt: string;
+}
+
 export interface NightAction {
   id: string;
   room_id: string;
@@ -122,7 +137,7 @@ export interface NightAction {
   actor_id: string;
   action_type: NightActionType;
   target_id: string | null;
-  result?: any;
+  result?: NightActionResult;
   created_at?: string;
 }
 

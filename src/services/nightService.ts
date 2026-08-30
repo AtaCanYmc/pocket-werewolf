@@ -1,5 +1,5 @@
 import { getSupabase } from '@/lib/supabase';
-import { Player, NightAction, NightActionType, DeathReason } from '@/types/game';
+import { Player, NightAction, NightActionType, DeathReason, NightActionResult, GameLog } from '@/types/game';
 import { checkWinCondition } from './winCondition';
 import { logger } from '@/utils/logger';
 
@@ -53,7 +53,7 @@ export async function submitNightAction(
   actorId: string,
   actionType: NightActionType,
   targetId: string | null,
-  result: any = null
+  result: NightActionResult = null
 ): Promise<void> {
   const supabase = getSupabase();
   if (!supabase) return;
@@ -243,7 +243,7 @@ export async function resolveNightPhase(
   const { deadPlayerIds, deathReasons } = calculateNightCasualties(actions);
 
   // Update dead players in database
-  const logsToInsert: any[] = [];
+  const logsToInsert: Array<Omit<GameLog, 'id' | 'created_at'>> = [];
 
   for (const playerId of deadPlayerIds) {
     const player = players.find(p => p.id === playerId);

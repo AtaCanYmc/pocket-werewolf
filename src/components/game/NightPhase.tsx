@@ -14,6 +14,20 @@ interface SeerResult {
   roleName: string;
 }
 
+/**
+ * NightPhase Component
+ * 
+ * Orchestrates the secret night phase. Players with active night roles (Werewolf, Seer,
+ * Doctor, Witch) perform their abilities or choose to pass/skip, while sleeping villagers
+ * play an interactive dream math minigame to stay engaged.
+ * 
+ * Features:
+ * - Role-specific interactive action panels (Werewolf hunt, Seer inspect, Doctor heal, Witch poison/save).
+ * - Optional skip/pass action option for all active roles.
+ * - Dream math minigame fallback for inactive roles and sleeping villagers.
+ * - Real-time action status tracking for the room host.
+ * - Host control to calculate casualties and transition the village to Dawn.
+ */
 export default function NightPhase() {
   const { room, players, me, isHost, nightActions, submitNightAction, resolveNight, loading } = useGame();
   const { t } = useTranslation();

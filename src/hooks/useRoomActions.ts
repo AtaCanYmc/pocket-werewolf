@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { getSupabase } from '@/lib/supabase';
 import { sound } from '@/utils/audio';
 import { logger } from '@/utils/logger';
+import { formatErrorMessage } from '@/utils/errors';
 import { DEFAULT_PRESETS } from '@/config/roles';
 import { createRoom, joinRoom } from '@/services/roomService';
-import { Room, Player, RoleDeckItem, RoomSettings, UserProfile } from '@/types/game';
+import { Room, Player, RoleDeckItem, RoomSettings, UserProfile, NightAction, Vote, GameLog } from '@/types/game';
 
 interface UseRoomActionsProps {
   sessionId: string;
@@ -15,9 +16,9 @@ interface UseRoomActionsProps {
   isHost: boolean;
   setRoom: React.Dispatch<React.SetStateAction<Room | null>>;
   setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
-  setNightActions: React.Dispatch<React.SetStateAction<any[]>>;
-  setVotes: React.Dispatch<React.SetStateAction<any[]>>;
-  setLogs: React.Dispatch<React.SetStateAction<any[]>>;
+  setNightActions: React.Dispatch<React.SetStateAction<NightAction[]>>;
+  setVotes: React.Dispatch<React.SetStateAction<Vote[]>>;
+  setLogs: React.Dispatch<React.SetStateAction<GameLog[]>>;
 }
 
 export function useRoomActions({
@@ -35,20 +36,6 @@ export function useRoomActions({
 }: UseRoomActionsProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  const formatErrorMessage = (err: any): string => {
-    const msg = err?.message || String(err);
-    if (
-      msg.includes('410') ||
-      msg.toLowerCase().includes('preflight') ||
-      msg.toLowerCase().includes('failed to fetch') ||
-      msg.toLowerCase().includes('load failed') ||
-      msg.toLowerCase().includes('access control checks')
-    ) {
-      return 'Supabase project is unreachable (HTTP 410 Gone / Network Error). Your project may be paused due to inactivity. Please unpause/restore it in the Supabase Dashboard or update your URL/Key in Settings.';
-    }
-    return msg;
-  };
 
   const handleCreateRoom = async (
     customDeck: RoleDeckItem[] | null = null,
@@ -70,7 +57,7 @@ export function useRoomActions({
       setRoom(newRoom);
       setPlayers([newPlayer]);
       return newRoom;
-    } catch (err: any) {
+    } catch (err: unknown) {
       const formatted = formatErrorMessage(err);
       setError(formatted);
       logger.error('Failed to create room:', err);
@@ -92,7 +79,7 @@ export function useRoomActions({
       );
       setRoom(joinedRoom);
       return joinedRoom;
-    } catch (err: any) {
+    } catch (err: unknown) {
       const formatted = formatErrorMessage(err);
       setError(formatted);
       logger.error('Failed to join room:', err);
@@ -118,7 +105,7 @@ export function useRoomActions({
         } else {
           await supabase.from('players').delete().eq('id', me.id);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         logger.error('Error during leave room:', err);
       }
     }
@@ -145,7 +132,7 @@ export function useRoomActions({
         setPlayers(prev => prev.map(p => p.id === me.id ? { ...p, is_ready: !newReadyState } : p));
         logger.error('Failed to toggle ready status:', updateError);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       setPlayers(prev => prev.map(p => p.id === me.id ? { ...p, is_ready: !newReadyState } : p));
       logger.error('Failed to toggle ready status:', err);
     }
@@ -158,7 +145,7 @@ export function useRoomActions({
     setPlayers(prev => prev.filter(p => p.id !== playerId));
     try {
       await supabase.from('players').delete().eq('id', playerId);
-    } catch (err) {
+    } catch (err: unknown) {
       logger.error('Failed to kick player:', err);
     }
   };
@@ -170,7 +157,7 @@ export function useRoomActions({
     setRoom(prev => prev ? { ...prev, deck: newDeck } : null);
     try {
       await supabase.from('rooms').update({ deck: newDeck }).eq('id', room.id);
-    } catch (err) {
+    } catch (err: unknown) {
       logger.error('Failed to update deck:', err);
     }
   };

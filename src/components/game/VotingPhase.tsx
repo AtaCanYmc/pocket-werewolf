@@ -5,6 +5,20 @@ import { Vote, Check, Skull, Ban, MessageSquare, Loader2 } from 'lucide-react';
 import TownChat from '@/components/game/TownChat';
 import { haptics } from '@/utils/haptics';
 
+/**
+ * VotingPhase Component
+ * 
+ * Manages the daily village trial and execution voting process. Living villagers cast ballots
+ * against suspected werewolves or choose to skip execution.
+ * 
+ * Features:
+ * - Real-time synchronized vote tally and status counter.
+ * - Single-tap voting and vote retraction.
+ * - Prominent "Skip / Blank Vote" option allowing the village to spare suspects.
+ * - Host execution controller: evaluates vote tallies, checks for ties or skip majorities,
+ *   applies lynch execution, and advances to the next Night phase or GameOver state.
+ * - Collapsible Town Square chat drawer during voting.
+ */
 export default function VotingPhase() {
   const { room, players, me, isHost, votes, submitVote, resolveVoting, loading } = useGame();
   const { t } = useTranslation();

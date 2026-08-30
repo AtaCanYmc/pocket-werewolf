@@ -6,6 +6,7 @@ import { ROLES } from '@/config/roles';
 import { useRealtimeRoom } from '@/hooks/useRealtimeRoom';
 import { useRoomActions } from '@/hooks/useRoomActions';
 import { usePhaseActions } from '@/hooks/usePhaseActions';
+import { RealtimePresenceState } from '@supabase/supabase-js';
 import {
   Room,
   Player,
@@ -17,6 +18,7 @@ import {
   RoleDefinition,
   RoleDeckItem,
   NightActionType,
+  NightActionResult,
   RoomSettings
 } from '@/types/game';
 
@@ -37,7 +39,7 @@ interface GameContextValue {
   error: string | null;
   soundEnabled: boolean;
   toggleSound: () => void;
-  onlinePresence: Record<string, any>;
+  onlinePresence: RealtimePresenceState;
   createRoom: (customDeck?: RoleDeckItem[] | null, settings?: RoomSettings, adminPassword?: string) => Promise<Room>;
   joinRoom: (code: string) => Promise<Room>;
   leaveRoom: () => Promise<void>;
@@ -46,7 +48,7 @@ interface GameContextValue {
   updateDeck: (newDeck: RoleDeckItem[]) => Promise<void>;
   startGame: () => Promise<void>;
   advanceToNight: () => Promise<void>;
-  submitNightAction: (actionType: NightActionType, targetId: string | null, result?: any) => Promise<void>;
+  submitNightAction: (actionType: NightActionType, targetId: string | null, result?: NightActionResult) => Promise<void>;
   resolveNight: () => Promise<void>;
   advanceToDay: () => Promise<void>;
   advanceToVoting: () => Promise<void>;
@@ -71,7 +73,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [logs, setLogs] = useState<GameLog[]>([]);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(sound.enabled);
-  const [onlinePresence, setOnlinePresence] = useState<Record<string, any>>({});
+  const [onlinePresence, setOnlinePresence] = useState<RealtimePresenceState>({});
 
   // Profile Update
   const updateProfile = (name: string, avatar: string) => {

@@ -207,6 +207,17 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </a>
             </div>
           </div>
+
+          {/* Local Developer & Mock Seeding Guide */}
+          <div className="bg-surface-light border border-slate-300 dark:border-slate-800 rounded-xl p-4 space-y-2 text-xs">
+            <div className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300">
+              <Database className="w-4 h-4 text-emerald-500" />
+              <span>Developer Mock Seeding</span>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-[11px]">
+              For rapid local testing with 6 players, run the SQL script in <code className="px-1 py-0.5 rounded bg-surface border border-surface-border text-emerald-400">supabase/seed.sql</code>, then join using room code <strong className="text-slate-100 font-mono">TEST</strong>.
+            </p>
+          </div>
         </div>
 
         {/* Modal Footer */}
