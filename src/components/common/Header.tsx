@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
-import { Volume2, VolumeX, Settings, BookOpen, Share2, LogOut, Copy, Check, Sun, Moon } from 'lucide-react';
+import { ROLES } from '@/config/roles';
 
 interface HeaderProps {
   onOpenSettings: () => void;
@@ -42,7 +42,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
         {/* Left: Brand & Room Code */}
         <div className="flex items-center gap-2 min-w-0 flex-shrink">
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-surface border border-surface-border flex items-center justify-center overflow-hidden shadow-flat-sm flex-shrink-0">
-            <img src="/assets/roles/Werewolf.png" alt="Pocket Werewolf" className="w-full h-full object-cover" />
+            <img src={ROLES.Werewolf.image} alt="Pocket Werewolf" className="w-full h-full object-cover" />
           </div>
 
           <div className="flex items-center gap-2 min-w-0">

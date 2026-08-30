@@ -5,6 +5,7 @@ import { Play, Plus, ArrowRight, Shield, Sparkles, Smartphone, Users, Lock, Load
 import { AVATARS } from '@/utils/session';
 import { checkAdminPasswordRequired } from '@/services/gameEngine';
 import { haptics } from '@/utils/haptics';
+import { ROLES } from '@/config/roles';
 
 interface HomeProps {
   onOpenSettings: () => void;
@@ -71,8 +72,8 @@ export default function Home({ onOpenSettings }: HomeProps) {
       }
       setAdminPasswordError(null);
       haptics.success();
-    } catch (err: any) {
-      if (err.message && err.message.toLowerCase().includes('admin password')) {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.toLowerCase().includes('admin password')) {
         setAdminPasswordError(t('home.adminPasswordError'));
       }
     }
@@ -96,7 +97,7 @@ export default function Home({ onOpenSettings }: HomeProps) {
       {/* Hero Banner (Sterile Flat Minimalist) */}
       <div className="text-center space-y-1.5 sm:space-y-2">
         <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-surface border border-surface-border mx-auto flex items-center justify-center overflow-hidden shadow-flat-sm">
-          <img src="/assets/roles/Werewolf.png" alt="Pocket Werewolf" className="w-full h-full object-cover" />
+          <img src={ROLES.Werewolf.image} alt="Pocket Werewolf" className="w-full h-full object-cover" />
         </div>
         <h1 className="font-gothic text-2xl sm:text-4xl font-black text-slate-900 dark:text-slate-100 tracking-wider">
           {t('app.title')}

@@ -1,15 +1,24 @@
 import { RoleDefinition, RoleId, RolePreset } from '@/types/game';
 
 /**
+ * Helper to resolve public assets correctly across base URLs (e.g. GitHub Pages or subpaths).
+ */
+export function getAssetPath(path: string): string {
+  const base = import.meta.env?.BASE_URL || './';
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${cleanBase}${cleanPath}`;
+}
+
+/**
  * Pocket Werewolf - Role Definitions, Assets, and Presets
  */
-
 export const ROLES: Record<RoleId, RoleDefinition> = {
   Werewolf: {
     id: 'Werewolf',
     name: 'Kurtadam',
     team: 'evil',
-    image: '/assets/roles/Werewolf.png',
+    image: getAssetPath('assets/roles/Werewolf.png'),
     fallbackIcon: '🐺',
     color: 'text-rose-400 border-rose-500/30 bg-rose-950/20',
     glowColor: 'blood',
@@ -24,7 +33,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'Villager',
     name: 'Köylü',
     team: 'good',
-    image: '/assets/roles/Villager1.png',
+    image: getAssetPath('assets/roles/Villager1.png'),
     fallbackIcon: '👨‍🌾',
     color: 'text-emerald-400 border-emerald-500/30 bg-emerald-950/20',
     glowColor: 'emerald',
@@ -38,7 +47,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'Seer',
     name: 'Gözcü (Kahin)',
     team: 'good',
-    image: '/assets/roles/Seer.png',
+    image: getAssetPath('assets/roles/Seer.png'),
     fallbackIcon: '🔮',
     color: 'text-indigo-400 border-indigo-500/30 bg-indigo-950/20',
     glowColor: 'mystic',
@@ -53,7 +62,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'Doctor',
     name: 'Doktor',
     team: 'good',
-    image: '/assets/roles/Doctor.png',
+    image: getAssetPath('assets/roles/Doctor.png'),
     fallbackIcon: '💉',
     color: 'text-sky-400 border-sky-500/30 bg-sky-950/20',
     glowColor: 'mystic',
@@ -68,7 +77,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'Witch',
     name: 'Cadı',
     team: 'good',
-    image: '/assets/roles/Witch.png',
+    image: getAssetPath('assets/roles/Witch.png'),
     fallbackIcon: '🧙‍♀️',
     color: 'text-purple-400 border-purple-500/30 bg-purple-950/20',
     glowColor: 'mystic',
@@ -83,7 +92,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'Hunter',
     name: 'Avcı',
     team: 'good',
-    image: '/assets/roles/Hunter.png',
+    image: getAssetPath('assets/roles/Hunter.png'),
     fallbackIcon: '🏹',
     color: 'text-amber-400 border-amber-500/30 bg-amber-950/20',
     glowColor: 'emerald',
@@ -97,7 +106,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'Sorceress',
     name: 'Büyücü',
     team: 'evil',
-    image: '/assets/roles/Sorceress.png',
+    image: getAssetPath('assets/roles/Sorceress.png'),
     fallbackIcon: '✨',
     color: 'text-pink-400 border-pink-500/30 bg-pink-950/20',
     glowColor: 'blood',
@@ -112,7 +121,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'BlindMinion',
     name: 'Kör Minyon',
     team: 'evil',
-    image: '/assets/roles/BlindMinion.png',
+    image: getAssetPath('assets/roles/BlindMinion.png'),
     fallbackIcon: '👺',
     color: 'text-rose-400 border-rose-500/30 bg-rose-950/20',
     glowColor: 'blood',
@@ -126,7 +135,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'KnowingMinion',
     name: 'Bilen Minyon',
     team: 'evil',
-    image: '/assets/roles/KnowingMinion.png',
+    image: getAssetPath('assets/roles/KnowingMinion.png'),
     fallbackIcon: '👁️',
     color: 'text-rose-400 border-rose-500/30 bg-rose-950/20',
     glowColor: 'blood',
@@ -140,7 +149,7 @@ export const ROLES: Record<RoleId, RoleDefinition> = {
     id: 'DreamWolf',
     name: 'Rüya Kurdu',
     team: 'evil',
-    image: '/assets/roles/DreamWolf.png',
+    image: getAssetPath('assets/roles/DreamWolf.png'),
     fallbackIcon: '🌙',
     color: 'text-rose-400 border-rose-500/30 bg-rose-950/20',
     glowColor: 'blood',

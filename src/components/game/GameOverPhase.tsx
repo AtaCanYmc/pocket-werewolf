@@ -41,9 +41,9 @@ export default function GameOverPhase() {
       >
         <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center overflow-hidden bg-surface border border-surface-border shadow-flat-sm">
           {isEvilWinner ? (
-            <img src="/assets/roles/Werewolf.png" alt="Werewolves Won" className="w-full h-full object-cover" />
+            <img src={ROLES.Werewolf.image} alt="Werewolves Won" className="w-full h-full object-cover" />
           ) : (
-            <img src="/assets/roles/Villager1.png" alt="Villagers Won" className="w-full h-full object-cover" />
+            <img src={ROLES.Villager.image} alt="Villagers Won" className="w-full h-full object-cover" />
           )}
         </div>
 
