@@ -1,25 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
+import { useToast } from '@/context/ToastContext';
 import Header from '@/components/common/Header';
-import Home from '@/components/Home';
-import LobbyView from '@/components/lobby/LobbyView';
-import RoleRevealPhase from '@/components/game/RoleRevealPhase';
-import NightPhase from '@/components/game/NightPhase';
-import DawnPhase from '@/components/game/DawnPhase';
-import DayPhase from '@/components/game/DayPhase';
-import VotingPhase from '@/components/game/VotingPhase';
-import GameOverPhase from '@/components/game/GameOverPhase';
-import SettingsModal from '@/components/modals/SettingsModal';
-import RoleGuideModal from '@/components/modals/RoleGuideModal';
-import ShareModal from '@/components/modals/ShareModal';
+import PhaseLoader from '@/components/common/PhaseLoader';
+import ToastContainer from '@/components/common/ToastContainer';
+
+// Code Splitting & Dynamic Imports for Phase & Modal Components
+const Home = lazy(() => import('@/components/Home'));
+const LobbyView = lazy(() => import('@/components/lobby/LobbyView'));
+const RoleRevealPhase = lazy(() => import('@/components/game/RoleRevealPhase'));
+const NightPhase = lazy(() => import('@/components/game/NightPhase'));
+const DawnPhase = lazy(() => import('@/components/game/DawnPhase'));
+const DayPhase = lazy(() => import('@/components/game/DayPhase'));
+const VotingPhase = lazy(() => import('@/components/game/VotingPhase'));
+const GameOverPhase = lazy(() => import('@/components/game/GameOverPhase'));
+const SettingsModal = lazy(() => import('@/components/modals/SettingsModal'));
+const RoleGuideModal = lazy(() => import('@/components/modals/RoleGuideModal'));
+const ShareModal = lazy(() => import('@/components/modals/ShareModal'));
 
 export default function App() {
-  const { room } = useGame();
+  const { room, error } = useGame();
   const { t } = useTranslation();
+  const { showError } = useToast();
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
   const [isShareOpen, setIsShareOpen] = useState<boolean>(false);
+
+  // Sync game engine / network errors with Toast notification system
+  useEffect(() => {
+    if (error) {
+      showError(error);
+    }
+  }, [error, showError]);
 
   // Dynamic phase renderer based on active room status
   const renderGameContent = () => {
@@ -54,6 +67,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col justify-between bg-background text-slate-900 dark:text-slate-100 selection:bg-blood selection:text-white transition-colors duration-300">
+      {/* Global Toast Notifications */}
+      <ToastContainer />
+
       {/* Top Header Navigation */}
       <Header
         onOpenSettings={() => setIsSettingsOpen(true)}
@@ -61,9 +77,11 @@ export default function App() {
         onOpenShare={() => setIsShareOpen(true)}
       />
 
-      {/* Main Game Phase Content */}
+      {/* Main Game Phase Content with Suspense Loading */}
       <main className="flex-1 w-full max-w-5xl mx-auto px-2.5 sm:px-6 py-2.5 sm:py-6 flex flex-col">
-        {renderGameContent()}
+        <Suspense fallback={<PhaseLoader />}>
+          {renderGameContent()}
+        </Suspense>
       </main>
 
       {/* Footer */}
@@ -71,10 +89,12 @@ export default function App() {
         <p>{t('app.footer')}</p>
       </footer>
 
-      {/* Modals */}
-      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
-      <RoleGuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
-      <ShareModal isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
+      {/* Modals wrapped in Suspense */}
+      <Suspense fallback={null}>
+        {isSettingsOpen && <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />}
+        {isGuideOpen && <RoleGuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />}
+        {isShareOpen && <ShareModal isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />}
+      </Suspense>
     </div>
   );
 }
