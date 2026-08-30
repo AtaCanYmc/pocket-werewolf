@@ -1,0 +1,44 @@
+# Pocket Werewolf 🐺
+
+> Pocket Werewolf is a free, real-time, mobile-first Progressive Web App (PWA) social deduction board game (Werewolf / Mafia) powered by Supabase Realtime (PostgreSQL) and React 19.
+
+Pocket Werewolf eliminates the need for physical cards, paper notes, or a human moderator. The game engine orchestrates night actions, secret roles, timed day discussions, and synchronized voting trials.
+
+## Key Features
+
+- **Real-Time Multiplayer:** Instant state synchronization via Supabase PostgreSQL changes and presence channels.
+- **Automated Game Engine:** Eliminates the moderator role; automatically resolves night kills, doctor protections, witch potions, seer visions, and daytime lynch votes.
+- **PWA & Mobile-First:** Installable on iOS/Android with haptic vibration feedback, procedural Web Audio sound synthesis, and responsive card layouts.
+- **No Mandatory Backend:** Fully client-orchestrated with serverless Supabase PostgreSQL backing.
+- **Multi-Language Support:** English, Turkish, French, German.
+
+## Game Roles & Teams
+
+### Village Team (Good)
+- **Villager:** Sleeps at night; identifies and votes out werewolves during the day.
+- **Seer:** Inspects one player each night to determine if they are Good or Evil (Werewolf).
+- **Doctor:** Selects one player each night to protect from werewolf attacks.
+- **Witch:** Holds one healing potion (saves werewolf target) and one lethal poison potion.
+- **Hunter:** When eliminated (by vote or night attack), takes down another player of choice.
+- **Mason:** Knows who the other Mason is from the beginning.
+
+### Werewolf Team (Evil)
+- **Werewolf:** Wakes each night with the wolf pack to choose a villager to eliminate.
+- **Sorceress:** Inspects one player each night to find the Seer.
+- **Knowing Minion:** Knows who the Werewolves are; wolves do not know the minion's identity.
+- **Blind Minion:** Aligned with werewolves but does not know their identities.
+- **Dream Wolf:** Werewolf that stays asleep until another pack member dies.
+
+## Technical Architecture
+
+- **Frontend:** React 19, TypeScript, Vite 6, Tailwind CSS 3.4 (Flat Dark Theme), Lucide Icons.
+- **Database & Realtime:** Supabase (PostgreSQL, Realtime replication, Presence channels).
+- **Audio & Haptics:** Procedural Web Audio API sound synthesis and Navigator Vibration API.
+- **Testing:** Vitest and React Testing Library.
+
+## Developer Links & Resources
+
+- [GitHub Repository](https://github.com/AtaCanYmc/pocket-werewolf)
+- [Developer Guide & Seeding](https://github.com/AtaCanYmc/pocket-werewolf/blob/main/docs/DEVELOPMENT.md)
+- [Database SQL Schema](https://github.com/AtaCanYmc/pocket-werewolf/blob/main/supabase/schema.sql)
+- [Database Seed Script](https://github.com/AtaCanYmc/pocket-werewolf/blob/main/supabase/seed.sql)

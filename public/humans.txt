@@ -1,0 +1,18 @@
+/* TEAM */
+  Developer: Ata Can Yaymacı
+  GitHub: https://github.com/AtaCanYmc
+  Project: Pocket Werewolf
+  Location: Turkey
+
+/* THANKS */
+  - Google DeepMind / Antigravity Team
+  - Supabase Team for Realtime Database & Postgres
+  - RealFaviconGenerator for Favicon Tools
+  - Open Source Community
+
+/* SITE */
+  Last update: 2026-08-30
+  Standards: HTML5, CSS3, ES2024, Web Audio API, PWA, WebSockets
+  Components: React 19, TypeScript, Vite 6, Tailwind CSS, Lucide Icons, Canvas Confetti
+  Architecture: Serverless Realtime PWA (PostgreSQL + Supabase Channels)
+  Software: VS Code / WebStorm, Antigravity AI
