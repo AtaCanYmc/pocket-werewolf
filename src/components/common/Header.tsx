@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
+import { Volume2, VolumeX, Settings, BookOpen, Share2, LogOut, Copy, Check, Sun, Moon } from 'lucide-react';
 import { ROLES } from '@/config/roles';
 
 interface HeaderProps {
