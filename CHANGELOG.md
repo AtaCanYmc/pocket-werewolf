@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.4.0...pocket-werewolf-v2.5.0) (2026-08-30)
+
+
+### ✨ Features
+
+* **CardFlip:** replace fallback icons with role images for improved visual representation ([8968caa](https://github.com/AtaCanYmc/pocket-werewolf/commit/8968caaf6a0a25e1f78dd23e0ebf43d0868be31a))
+* **Header:** add icon imports for volume control and settings ([6f3d59e](https://github.com/AtaCanYmc/pocket-werewolf/commit/6f3d59e24948d0d60c0884d15be0c3b48ca7dc02))
+* **roles:** refactor role image paths to use dynamic asset resolution ([a6ef8fb](https://github.com/AtaCanYmc/pocket-werewolf/commit/a6ef8fb6df6e9a59856653397bd026b860dbd943))
+* **visuals:** replace emoji placeholders with role images for enhanced visual clarity ([55631f2](https://github.com/AtaCanYmc/pocket-werewolf/commit/55631f2d1b7a26d3ad6cdbf810b8aadee8696734))
+
+
+### 💄 Styles
+
+* **images:** update role images ([481ab1b](https://github.com/AtaCanYmc/pocket-werewolf/commit/481ab1b6fd412c2eeb489a8942d558f3f0dff46f))
+* **RoleGuideModal:** update image container styles for improved aesthetics and consistency ([b11f7d4](https://github.com/AtaCanYmc/pocket-werewolf/commit/b11f7d4dcfea80080b97c8a22160880b3e2908cc))
+
 ## [2.4.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.3.0...pocket-werewolf-v2.4.0) (2026-08-30)
 
 
