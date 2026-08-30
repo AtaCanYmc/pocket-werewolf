@@ -95,8 +95,8 @@ export default function Home({ onOpenSettings }: HomeProps) {
     <div className="max-w-xl w-full mx-auto px-3 sm:px-4 py-3 sm:py-6 space-y-4 sm:space-y-6 animate-fade-in pb-12">
       {/* Hero Banner (Sterile Flat Minimalist) */}
       <div className="text-center space-y-1.5 sm:space-y-2">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blood/10 border border-blood/20 mx-auto flex items-center justify-center text-3xl shadow-flat-sm">
-          🐺
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-surface border border-surface-border mx-auto flex items-center justify-center overflow-hidden shadow-flat-sm">
+          <img src="/assets/roles/Werewolf.png" alt="Pocket Werewolf" className="w-full h-full object-cover" />
         </div>
         <h1 className="font-gothic text-2xl sm:text-4xl font-black text-slate-900 dark:text-slate-100 tracking-wider">
           {t('app.title')}

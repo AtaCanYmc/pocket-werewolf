@@ -39,8 +39,12 @@ export default function GameOverPhase() {
             : 'bg-emerald-950/20 border-emerald-500/40 text-slate-100'
         }`}
       >
-        <div className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center text-3xl bg-surface border border-surface-border">
-          {isEvilWinner ? '🐺' : '🏆'}
+        <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center overflow-hidden bg-surface border border-surface-border shadow-flat-sm">
+          {isEvilWinner ? (
+            <img src="/assets/roles/Werewolf.png" alt="Werewolves Won" className="w-full h-full object-cover" />
+          ) : (
+            <img src="/assets/roles/Villager1.png" alt="Villagers Won" className="w-full h-full object-cover" />
+          )}
         </div>
 
         <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-widest uppercase text-slate-400 block">

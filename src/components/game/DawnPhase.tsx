@@ -58,8 +58,11 @@ export default function DawnPhase() {
                   key={p.id}
                   className="bg-rose-950/20 border border-rose-500/30 rounded-2xl p-4 shadow-flat-sm flex items-center gap-3.5 text-left"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-surface border border-rose-500/30 flex items-center justify-center text-2xl flex-shrink-0">
-                    💀
+                  <div className="w-12 h-12 rounded-xl bg-surface border border-rose-500/30 relative overflow-hidden flex-shrink-0">
+                    <img src={roleDef.image} alt={localizedRoleName} className="w-full h-full object-cover grayscale contrast-125" />
+                    <div className="absolute inset-0 bg-rose-950/40 flex items-center justify-center text-lg">
+                      💀
+                    </div>
                   </div>
                   <div className="min-w-0">
                     <h4 className="font-gothic text-base font-bold text-slate-100 truncate">{p.name}</h4>
