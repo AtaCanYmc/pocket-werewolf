@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
-import { Play, Plus, ArrowRight, Shield, Sparkles, Smartphone, Users, Lock, Loader2 } from 'lucide-react';
+import { Play, Plus, ArrowRight, Shield, Sparkles, Smartphone, Users, Lock, Loader2, BookOpen } from 'lucide-react';
 import { AVATARS } from '@/utils/session';
 import { checkAdminPasswordRequired } from '@/services/gameEngine';
 import { haptics } from '@/utils/haptics';
@@ -12,7 +12,7 @@ interface HomeProps {
   onOpenGuide?: () => void;
 }
 
-export default function Home({ onOpenSettings }: HomeProps) {
+export default function Home({ onOpenSettings, onOpenGuide }: HomeProps) {
   const { profile, updateProfile, createRoom, joinRoom, credentials, loading, error } = useGame();
   const { t } = useTranslation();
   const [name, setName] = useState<string>(profile.name);
@@ -303,6 +303,38 @@ export default function Home({ onOpenSettings }: HomeProps) {
           </form>
         )}
       </div>
+
+      {/* Role & Rules Guide Card (Easy access on Mobile and Desktop) */}
+      {onOpenGuide && (
+        <button
+          type="button"
+          onClick={() => {
+            haptics.tap();
+            onOpenGuide();
+          }}
+          className="w-full p-3.5 sm:p-4 rounded-2xl bg-surface border border-surface-border hover:border-slate-600 flex items-center justify-between text-left shadow-flat-sm transition-all active:scale-[0.99] group"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-indigo-950/30 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-105 transition-transform flex-shrink-0">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs sm:text-sm font-gothic font-bold text-slate-900 dark:text-slate-100 truncate">
+                  {t('header.guide')}
+                </h3>
+                <span className="text-[9px] sm:text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-indigo-950/40 text-indigo-400 border border-indigo-500/30 flex-shrink-0">
+                  {t('modals.guideTitle')}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                {t('modals.guideObjective')}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-200 group-hover:translate-x-0.5 transition-all flex-shrink-0 ml-2" />
+        </button>
+      )}
 
       {/* Feature Badges */}
       <div className="grid grid-cols-3 gap-2 sm:gap-2.5 text-center">
