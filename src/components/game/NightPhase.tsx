@@ -114,8 +114,10 @@ export default function NightPhase() {
         </p>
 
         {/* Player Role Badge */}
-        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-light border border-surface-border text-xs font-medium">
-          <span className="text-base">{roleDef.fallbackIcon}</span>
+        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-light border border-surface-border text-xs font-medium">
+          <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 bg-surface border border-surface-border">
+            <img src={roleDef.image} alt={localizedRoleName} className="w-full h-full object-cover" />
+          </div>
           <span className="text-slate-300">
             <span>{t('night.yourRole')}</span>{' '}
             <strong className="text-slate-100 font-gothic">{localizedRoleName}</strong>

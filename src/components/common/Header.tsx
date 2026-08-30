@@ -41,8 +41,8 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
         {/* Left: Brand & Room Code */}
         <div className="flex items-center gap-2 min-w-0 flex-shrink">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-blood/20 border border-blood/40 flex items-center justify-center text-base sm:text-lg shadow-blood-glow flex-shrink-0">
-            🐺
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-surface border border-surface-border flex items-center justify-center overflow-hidden shadow-flat-sm flex-shrink-0">
+            <img src="/assets/roles/Werewolf.png" alt="Pocket Werewolf" className="w-full h-full object-cover" />
           </div>
 
           <div className="flex items-center gap-2 min-w-0">

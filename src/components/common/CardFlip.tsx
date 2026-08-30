@@ -80,16 +80,18 @@ export default function CardFlip({ roleId, team, playerName, onReveal }: CardFli
                 {isEvil ? <Skull className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}
                 {isEvil ? t('roleReveal.evilBadge') : t('roleReveal.goodBadge')}
               </span>
-              <span className="text-xl">{role.fallbackIcon}</span>
+              <div className="w-7 h-7 rounded-full overflow-hidden border border-surface-border bg-surface flex-shrink-0">
+                <img src={role.image} alt={localizedRoleName} className="w-full h-full object-cover" />
+              </div>
             </div>
 
             {/* Role Image and Title */}
             <div className="flex flex-col items-center text-center">
-              <div className="w-28 h-28 rounded-2xl overflow-hidden bg-slate-900/80 border border-slate-700/80 p-2 flex items-center justify-center mb-3 shadow-lg">
+              <div className="w-28 h-28 rounded-2xl overflow-hidden bg-slate-900 border border-slate-700 p-0.5 flex items-center justify-center mb-3 shadow-lg">
                 <img
                   src={role.image}
                   alt={localizedRoleName}
-                  className="w-full h-full object-contain filter drop-shadow-md"
+                  className="w-full h-full object-cover rounded-xl filter drop-shadow-md"
                   onError={(e) => {
                     const target = e.target as HTMLElement;
                     target.style.display = 'none';

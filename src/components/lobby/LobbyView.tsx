@@ -265,10 +265,12 @@ export default function LobbyView({ onOpenShare }: LobbyViewProps) {
                       key={role.id}
                       className="flex items-center justify-between p-2 rounded-xl bg-surface-light border border-surface-border"
                     >
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-lg">{role.fallbackIcon}</span>
-                        <div>
-                          <span className="text-xs font-medium text-slate-900 dark:text-slate-100 block leading-tight">{localizedName}</span>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-surface border border-surface-border overflow-hidden flex-shrink-0">
+                          <img src={role.image} alt={localizedName} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-xs font-medium text-slate-900 dark:text-slate-100 block leading-tight truncate">{localizedName}</span>
                           <span className={`text-[9px] sm:text-[10px] ${isEvil ? 'text-rose-400' : 'text-emerald-400'}`}>
                             {isEvil ? t('lobby.evilTeam') : t('lobby.goodTeam')}
                           </span>
