@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '@/context/LanguageContext';
 import { X, Smartphone, Download, MoreVertical, Monitor, CheckCircle2, Zap } from 'lucide-react';
 import { haptics } from '@/utils/haptics';
+import { getAssetPath } from '@/config/roles';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -87,7 +88,7 @@ export default function PwaGuideModal({ isOpen, onClose }: PwaGuideModalProps) {
           <div className="p-4 rounded-2xl bg-surface-light border border-surface-border flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left shadow-flat-sm">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-12 h-12 rounded-xl bg-surface border border-surface-border overflow-hidden flex-shrink-0 shadow-flat-sm">
-                <img src="/icons/icon-192.png" alt="Pocket Werewolf" className="w-full h-full object-cover" />
+                <img src={getAssetPath('icons/icon-192.png')} alt="Pocket Werewolf" className="w-full h-full object-cover" />
               </div>
               <div className="min-w-0">
                 <h3 className="font-gothic font-bold text-sm sm:text-base text-slate-900 dark:text-slate-100">Pocket Werewolf</h3>
