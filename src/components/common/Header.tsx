@@ -139,13 +139,15 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
             )}
           </div>
 
-          {/* Role Guide (Desktop) */}
+          {/* Role Guide (Desktop & Mobile) */}
           <button
-            onClick={onOpenGuide}
+            onClick={() => {
+              onOpenGuide();
+            }}
             title={t('header.guide')}
-            className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
+            className="flex p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
           >
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Sound Toggle */}
