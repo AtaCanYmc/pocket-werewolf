@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.3.0...pocket-werewolf-v2.4.0) (2026-08-30)
+
+
+### ✨ Features
+
+* **ci:** add unit and integration tests to CI pipeline; introduce logger and toast context ([ce450cd](https://github.com/AtaCanYmc/pocket-werewolf/commit/ce450cd2178adca00463dd9e35e2f4b4cc334e8a))
+* **docs:** add developer guide and local environment setup; enhance component documentation ([6c90001](https://github.com/AtaCanYmc/pocket-werewolf/commit/6c900017c71f567f33ad472bc863c40df9bb853a))
+* **haptics:** implement haptic feedback for game interactions; update UI styles for consistency ([d2c4b91](https://github.com/AtaCanYmc/pocket-werewolf/commit/d2c4b918b767a970bebacd567c765f02a12c2884))
+
+
+### 💄 Styles
+
+* **Home:** improve label and input text colors for better accessibility and consistency ([cd79d86](https://github.com/AtaCanYmc/pocket-werewolf/commit/cd79d86b7ff2c70fada2bc5a7aba45fb33949fa2))
+
+
+### 🧹 Miscellaneous Chores
+
+* **deps:** update react and react-dom to version 19.2.8 ([04838a8](https://github.com/AtaCanYmc/pocket-werewolf/commit/04838a84c0dc10956d0d284d47b454d19f3c5ff4))
+
 ## [2.3.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.2.0...pocket-werewolf-v2.3.0) (2026-08-28)
 
 
