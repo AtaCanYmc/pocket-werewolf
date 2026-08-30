@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useGame } from '@/context/GameContext';
 import { useTranslation } from '@/context/LanguageContext';
-import { Vote, Check, Skull, Ban, MessageSquare } from 'lucide-react';
+import { Vote, Check, Skull, Ban, MessageSquare, Loader2 } from 'lucide-react';
 import TownChat from '@/components/game/TownChat';
+import { haptics } from '@/utils/haptics';
 
 export default function VotingPhase() {
   const { room, players, me, isHost, votes, submitVote, resolveVoting, loading } = useGame();
   const { t } = useTranslation();
   const [showChat, setShowChat] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   if (!room || !me) return null;
 
@@ -33,45 +35,58 @@ export default function VotingPhase() {
 
   const isMyVoteSkip = Boolean(myVote && myVote.target_id === null);
 
-  const handleCastPlayerVote = (targetId: string) => {
-    if (!isAlive) return;
+  const handleCastPlayerVote = async (targetId: string) => {
+    if (!isAlive || isSubmitting) return;
+    setIsSubmitting(true);
     if (myVote?.target_id === targetId) {
-      submitVote(null, true); // Retract vote completely
+      haptics.tap();
+      await submitVote(null, true); // Retract vote completely
     } else {
-      submitVote(targetId, false);
+      haptics.selection();
+      await submitVote(targetId, false);
     }
+    setIsSubmitting(false);
   };
 
-  const handleCastSkipVote = () => {
-    if (!isAlive) return;
+  const handleCastSkipVote = async () => {
+    if (!isAlive || isSubmitting) return;
+    setIsSubmitting(true);
     if (isMyVoteSkip) {
-      submitVote(null, true); // Retract skip vote completely
+      haptics.tap();
+      await submitVote(null, true); // Retract skip vote completely
     } else {
-      submitVote(null, false); // Cast explicit skip/blank vote
+      haptics.selection();
+      await submitVote(null, false); // Cast explicit skip/blank vote
     }
+    setIsSubmitting(false);
+  };
+
+  const handleResolveVotingWithHaptics = async () => {
+    haptics.impact();
+    await resolveVoting();
   };
 
   return (
-    <div className="max-w-3xl w-full mx-auto px-3 sm:px-4 py-2 sm:py-4 space-y-4 sm:space-y-6 animate-fade-in">
-      {/* Voting Header */}
-      <div className="bg-gradient-to-b from-red-500/10 via-surface to-surface border border-red-500/30 dark:border-red-900/60 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl text-center space-y-1.5 sm:space-y-2">
+    <div className="max-w-3xl w-full mx-auto px-3 sm:px-4 py-2 sm:py-4 space-y-4 sm:space-y-5 animate-fade-in pb-16 md:pb-6">
+      {/* Voting Header (Sterile Dark Flat UI) */}
+      <div className="bg-surface border border-surface-border rounded-2xl p-4 sm:p-6 shadow-flat text-center space-y-1.5 sm:space-y-2">
         <div className="flex items-center justify-center gap-2">
-          <Vote className="w-5 h-5 sm:w-6 sm:h-6 text-red-500 animate-bounce" />
-          <span className="text-[11px] sm:text-xs font-mono font-bold tracking-widest text-red-600 dark:text-red-400 uppercase">
+          <Vote className="w-5 h-5 text-rose-500" />
+          <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-widest text-rose-400 uppercase">
             {t('voting.votingTag')}
           </span>
         </div>
 
-        <h2 className="font-gothic text-2xl sm:text-4xl font-black text-slate-900 dark:text-slate-100">
+        <h2 className="font-gothic text-xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">
           {t('voting.title')}
         </h2>
-        <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+        <p className="text-[11px] sm:text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
           {t('voting.subtitle')}
         </p>
 
-        <div className="text-[11px] sm:text-xs font-mono text-slate-600 dark:text-slate-400 mt-1 sm:mt-2">
+        <div className="text-[11px] sm:text-xs font-mono text-slate-400 mt-1 sm:mt-2">
           <span>{t('voting.totalVotes')}</span>{' '}
-          <strong className="text-red-500 dark:text-red-400 font-bold">{roundVotes.length}</strong>
+          <strong className="text-rose-400 font-bold">{roundVotes.length}</strong>
           {' / '}
           <span>{alivePlayers.length}</span>
         </div>
@@ -82,27 +97,27 @@ export default function VotingPhase() {
         <button
           type="button"
           onClick={handleCastSkipVote}
-          disabled={!isAlive}
-          className={`w-full p-3.5 sm:p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] shadow-sm ${
+          disabled={!isAlive || isSubmitting}
+          className={`w-full p-3.5 sm:p-4 rounded-xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.98] ${
             isMyVoteSkip
-              ? 'bg-amber-50 dark:bg-amber-950/80 text-amber-900 dark:text-amber-100 border-amber-500 shadow-md ring-2 ring-amber-500/50'
-              : 'bg-surface-light border-slate-300 dark:border-slate-800 hover:border-amber-500/60 text-slate-800 dark:text-slate-200'
+              ? 'bg-amber-950/30 text-amber-200 border-amber-500/60 shadow-flat-sm'
+              : 'bg-surface-light border-surface-border hover:border-slate-600 text-slate-300'
           }`}
         >
           <div className="flex items-center gap-3 sm:gap-3.5">
-            <div className={`p-2 sm:p-2.5 rounded-xl ${isMyVoteSkip ? 'bg-amber-500 text-white' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'}`}>
+            <div className={`p-2 rounded-lg ${isMyVoteSkip ? 'bg-amber-500/20 text-amber-300' : 'bg-surface text-amber-400 border border-surface-border'}`}>
               <Ban className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-bold font-gothic block">
+                <span className="text-xs sm:text-sm font-semibold font-gothic block text-slate-100">
                   {t('voting.skipVoteTitle')}
                 </span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">
+                <span className="text-[9px] uppercase font-mono px-1.5 py-0.5 rounded bg-amber-950/40 border border-amber-500/30 text-amber-400 font-medium">
                   {t('voting.skipVoteBadge')}
                 </span>
               </div>
-              <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">
                 {t('voting.skipVoteSubtitle')}
               </p>
             </div>
@@ -110,17 +125,17 @@ export default function VotingPhase() {
 
           <div className="flex items-center gap-2">
             {skipVoteCount > 0 && (
-              <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold">
+              <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-amber-950/50 border border-amber-500/30 text-amber-300 text-xs font-mono font-semibold">
                 {t('voting.votesBadge', { count: skipVoteCount })}
               </span>
             )}
-            {isMyVoteSkip && <Check className="w-5 h-5 text-amber-500" />}
+            {isMyVoteSkip && <Check className="w-4 h-4 text-amber-400" />}
           </div>
         </button>
       </div>
 
-      {/* Living Players Voting Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
+      {/* Living Players Voting Cards Grid (Mobile Responsive 1-col on mobile, 2-col on tablet+) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         {alivePlayers.map((p) => {
           const isSelected = myVote?.target_id === p.id;
           const voteCount = voteTally[p.id] || 0;
@@ -130,27 +145,29 @@ export default function VotingPhase() {
             <button
               key={p.id}
               onClick={() => handleCastPlayerVote(p.id)}
-              disabled={!isAlive}
-              className={`p-3 sm:p-4 rounded-2xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.99] ${
+              disabled={!isAlive || isSubmitting}
+              className={`p-3 sm:p-3.5 rounded-xl border text-left flex items-center justify-between transition-all select-none active:scale-[0.98] ${
                 isSelected
-                  ? 'bg-red-950 text-white border-red-500 shadow-blood-glow ring-2 ring-red-500/50'
-                  : 'bg-surface-light border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 text-slate-900 dark:text-slate-100'
+                  ? 'bg-rose-950/30 text-rose-100 border-rose-500/60 shadow-flat-sm'
+                  : 'bg-surface-light border-surface-border hover:border-slate-600 text-slate-100'
               }`}
             >
               <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                <span className="text-xl sm:text-2xl flex-shrink-0">{p.avatar || '👤'}</span>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-surface border border-surface-border flex items-center justify-center text-lg sm:text-xl flex-shrink-0">
+                  {p.avatar || '👤'}
+                </div>
                 <div className="min-w-0 truncate">
                   <div className="flex items-center gap-1.5 truncate">
                     <span className="text-xs sm:text-sm font-semibold truncate block">
                       {p.name}
                     </span>
                     {isMe && (
-                      <span className="text-[10px] text-indigo-500 dark:text-indigo-400 font-medium flex-shrink-0">
+                      <span className="text-[10px] text-indigo-400 font-medium flex-shrink-0">
                         ({t('lobby.you')})
                       </span>
                     )}
                   </div>
-                  <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 block truncate">
+                  <span className="text-[10px] sm:text-[11px] text-slate-400 block truncate">
                     {isSelected ? t('voting.yourVoteOn') : t('voting.tapToVote')}
                   </span>
                 </div>
@@ -159,11 +176,11 @@ export default function VotingPhase() {
               {/* Vote Count Badge */}
               <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                 {voteCount > 0 && (
-                  <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-red-100 dark:bg-red-950 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-mono font-bold shadow-inner">
+                  <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-rose-950/50 border border-rose-500/30 text-rose-300 text-xs font-mono font-semibold">
                     {t('voting.votesBadge', { count: voteCount })}
                   </span>
                 )}
-                {isSelected && <Check className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />}
+                {isSelected && <Check className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />}
               </div>
             </button>
           );
@@ -178,32 +195,32 @@ export default function VotingPhase() {
         const canExecute = allVoted && !loading;
 
         return (
-          <div className="bg-surface border border-surface-border rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+          <div className="bg-surface border border-surface-border rounded-2xl p-4 sm:p-5 shadow-flat flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             <div>
               <div className="flex items-center gap-2">
                 <h4 className="font-gothic font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base">{t('voting.hostTitle')}</h4>
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${
                   allVoted
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
-                    : 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                    ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/30'
+                    : 'bg-amber-950/40 text-amber-400 border-amber-500/30'
                 }`}>
                   {livingVotedCount} / {totalLivingCount}
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
                 {allVoted ? t('voting.allVotedSubtitle') : t('voting.waitingVotesSubtitle')}
               </p>
             </div>
             <button
-              onClick={resolveVoting}
+              onClick={handleResolveVotingWithHaptics}
               disabled={!canExecute}
-              className={`w-full sm:w-auto py-3 sm:py-3.5 px-6 sm:px-8 rounded-xl font-gothic font-bold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg flex items-center justify-center gap-2 flex-shrink-0 ${
+              className={`w-full sm:w-auto py-3 px-5 sm:px-6 rounded-xl font-gothic font-bold text-xs sm:text-sm tracking-wider uppercase transition-all flex items-center justify-center gap-2 flex-shrink-0 ${
                 canExecute
-                  ? 'bg-red-600 hover:bg-red-500 text-white shadow-blood-glow active:scale-[0.99] cursor-pointer'
-                  : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed opacity-75'
+                  ? 'bg-blood hover:bg-blood-hover text-white active:scale-[0.98] cursor-pointer shadow-flat-sm'
+                  : 'bg-surface-light border border-surface-border text-slate-500 cursor-not-allowed opacity-50'
               }`}
             >
-              <Skull className="w-4 h-4 sm:w-5 sm:h-5" />
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Skull className="w-4 h-4" />}
               <span>
                 {loading
                   ? t('voting.resolvingBtn')
@@ -218,19 +235,22 @@ export default function VotingPhase() {
           </div>
         );
       })() : (
-        <div className="p-3.5 rounded-xl bg-surface-light border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 text-center animate-pulse">
+        <div className="p-3 rounded-xl bg-surface-light border border-surface-border text-xs text-slate-400 text-center">
           {t('voting.waitingHost')}
         </div>
       )}
 
       {/* Optional Village Discussion Chat in Voting Phase */}
-      <div className="space-y-3 pt-2">
+      <div className="space-y-3 pt-1">
         <button
           type="button"
-          onClick={() => setShowChat(!showChat)}
-          className="w-full py-2.5 px-4 rounded-xl bg-surface-light border border-slate-200 dark:border-slate-800 hover:border-indigo-400 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.99]"
+          onClick={() => {
+            haptics.tap();
+            setShowChat(!showChat);
+          }}
+          className="w-full py-2.5 px-4 rounded-xl bg-surface-light border border-surface-border hover:border-indigo-400/50 text-xs font-medium text-slate-300 flex items-center justify-center gap-2 transition-all shadow-flat-sm active:scale-[0.98]"
         >
-          <MessageSquare className="w-4 h-4 text-indigo-500" />
+          <MessageSquare className="w-4 h-4 text-indigo-400" />
           <span>{showChat ? t('voting.toggleChatHide') : t('voting.toggleChatShow')}</span>
         </button>
 

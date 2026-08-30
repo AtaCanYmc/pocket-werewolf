@@ -9,20 +9,20 @@
     --sab: env(safe-area-inset-bottom, 0px);
     --sal: env(safe-area-inset-left, 0px);
 
-    /* Light Theme Palette */
-    --bg-color: #f1f5f9;
+    /* Light Theme Palette (Clean Sterile Flat) */
+    --bg-color: #f8fafc;
     --surface-color: #ffffff;
-    --surface-light-color: #f8fafc;
+    --surface-light-color: #f1f5f9;
     --surface-border-color: #e2e8f0;
     --text-main: #0f172a;
     --text-muted: #64748b;
   }
 
   .dark {
-    /* Dark Gothic Werewolf Palette */
-    --bg-color: #07090e;
-    --surface-color: #0f1422;
-    --surface-light-color: #172033;
+    /* Dark Mode Palette (Sterile Minimalist Slate/Zinc Flat UI) */
+    --bg-color: #090d16;
+    --surface-color: #111724;
+    --surface-light-color: #182030;
     --surface-border-color: #1e293b;
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
@@ -35,24 +35,12 @@
   }
 
   body {
-    @apply bg-background antialiased font-sans min-h-screen transition-colors duration-300;
+    @apply bg-background antialiased font-sans min-h-screen transition-colors duration-200;
     color: var(--text-main);
-    background-image: 
-      radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.4) 0%, transparent 60%),
-      radial-gradient(circle at 100% 100%, rgba(225, 29, 72, 0.06) 0%, transparent 50%),
-      radial-gradient(circle at 0% 100%, rgba(99, 102, 241, 0.06) 0%, transparent 50%);
-    background-attachment: fixed;
     padding-top: var(--sat);
     padding-bottom: var(--sab);
     padding-left: var(--sal);
     padding-right: var(--sar);
-  }
-
-  .light body {
-    background-image: 
-      radial-gradient(circle at 50% 0%, rgba(203, 213, 225, 0.6) 0%, transparent 60%),
-      radial-gradient(circle at 100% 100%, rgba(225, 29, 72, 0.04) 0%, transparent 50%),
-      radial-gradient(circle at 0% 100%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
   }
 }
 
@@ -88,26 +76,13 @@
   min-width: 44px;
 }
 
-/* Custom glowing borders and effects */
-.glow-blood {
-  box-shadow: 0 0 20px rgba(225, 29, 72, 0.4);
-}
-
-.glow-mystic {
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-}
-
-.glow-emerald {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-}
-
 /* Custom smooth scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-color);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--surface-border-color);
@@ -117,11 +92,12 @@
   background: #64748b;
 }
 
-/* Smooth active button tap feedback */
+/* Smooth active button tap feedback with crisp scale */
 button {
   user-select: none;
   -webkit-user-select: none;
+  transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 button:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
