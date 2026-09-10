@@ -4,7 +4,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { fileURLToPath, URL } from 'node:url';
 
 const matchesPackage = (id, packageName) =>
-  id.endsWith(`/node_modules/${packageName}`) || id.includes(`/node_modules/${packageName}/`);
+  id === packageName ||
+  id.startsWith(`${packageName}/`) ||
+  id.endsWith(`/node_modules/${packageName}`) ||
+  id.includes(`/node_modules/${packageName}/`);
 
 export default defineConfig({
   base: './',
