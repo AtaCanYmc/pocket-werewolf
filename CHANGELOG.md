@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.6.1](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.6.0...pocket-werewolf-v2.6.1) (2026-09-10)
+
+
+### 🐛 Bug Fixes
+
+* match Vite manual chunk package roots ([562c5a5](https://github.com/AtaCanYmc/pocket-werewolf/commit/562c5a578b225546b33d1bc4acf979784df41690))
+* preserve deep import chunk matching ([7ce0f81](https://github.com/AtaCanYmc/pocket-werewolf/commit/7ce0f81d6e0827f0083f85d6404a885da8169344))
+
 ## [2.6.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.5.0...pocket-werewolf-v2.6.0) (2026-08-30)
 
 
