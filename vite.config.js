@@ -45,10 +45,26 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-supabase': ['@supabase/supabase-js'],
-          'vendor-ui': ['lucide-react', 'clsx', 'tailwind-merge', 'canvas-confetti', 'qrcode.react']
+        manualChunks(id) {
+          if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/')) {
+            return 'vendor-react';
+          }
+
+          if (id.includes('/node_modules/@supabase/supabase-js/')) {
+            return 'vendor-supabase';
+          }
+
+          if (
+            id.includes('/node_modules/lucide-react/') ||
+            id.includes('/node_modules/clsx/') ||
+            id.includes('/node_modules/tailwind-merge/') ||
+            id.includes('/node_modules/canvas-confetti/') ||
+            id.includes('/node_modules/qrcode.react/')
+          ) {
+            return 'vendor-ui';
+          }
+
+          return undefined;
         }
       }
     }
