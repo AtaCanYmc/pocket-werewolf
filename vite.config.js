@@ -46,20 +46,22 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/')) {
+          const normalizedId = id.replaceAll('\\', '/');
+
+          if (normalizedId.includes('/node_modules/react/') || normalizedId.includes('/node_modules/react-dom/')) {
             return 'vendor-react';
           }
 
-          if (id.includes('/node_modules/@supabase/supabase-js/')) {
+          if (normalizedId.includes('/node_modules/@supabase/supabase-js/')) {
             return 'vendor-supabase';
           }
 
           if (
-            id.includes('/node_modules/lucide-react/') ||
-            id.includes('/node_modules/clsx/') ||
-            id.includes('/node_modules/tailwind-merge/') ||
-            id.includes('/node_modules/canvas-confetti/') ||
-            id.includes('/node_modules/qrcode.react/')
+            normalizedId.includes('/node_modules/lucide-react/') ||
+            normalizedId.includes('/node_modules/clsx/') ||
+            normalizedId.includes('/node_modules/tailwind-merge/') ||
+            normalizedId.includes('/node_modules/canvas-confetti/') ||
+            normalizedId.includes('/node_modules/qrcode.react/')
           ) {
             return 'vendor-ui';
           }
