@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { fileURLToPath, URL } from 'node:url';
 
+const matchesPackage = (id, packageName) =>
+  id.endsWith(`/node_modules/${packageName}`) || id.includes(`/node_modules/${packageName}/`);
+
 export default defineConfig({
   base: './',
   plugins: [
@@ -48,20 +51,20 @@ export default defineConfig({
         manualChunks(id) {
           const normalizedId = id.replaceAll('\\', '/');
 
-          if (normalizedId.includes('/node_modules/react/') || normalizedId.includes('/node_modules/react-dom/')) {
+          if (matchesPackage(normalizedId, 'react') || matchesPackage(normalizedId, 'react-dom')) {
             return 'vendor-react';
           }
 
-          if (normalizedId.includes('/node_modules/@supabase/supabase-js/')) {
+          if (matchesPackage(normalizedId, '@supabase/supabase-js')) {
             return 'vendor-supabase';
           }
 
           if (
-            normalizedId.includes('/node_modules/lucide-react/') ||
-            normalizedId.includes('/node_modules/clsx/') ||
-            normalizedId.includes('/node_modules/tailwind-merge/') ||
-            normalizedId.includes('/node_modules/canvas-confetti/') ||
-            normalizedId.includes('/node_modules/qrcode.react/')
+            matchesPackage(normalizedId, 'lucide-react') ||
+            matchesPackage(normalizedId, 'clsx') ||
+            matchesPackage(normalizedId, 'tailwind-merge') ||
+            matchesPackage(normalizedId, 'canvas-confetti') ||
+            matchesPackage(normalizedId, 'qrcode.react')
           ) {
             return 'vendor-ui';
           }
