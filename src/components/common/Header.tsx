@@ -59,6 +59,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
                 <button
                   onClick={handleCopyCode}
                   title={t('header.copyCode')}
+                  aria-label={t('header.copyCode')}
                   className="p-0.5 hover:text-slate-900 dark:hover:text-white text-slate-500 dark:text-slate-400 transition-colors rounded active:scale-90"
                 >
                   {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
@@ -67,6 +68,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
                   <button
                     onClick={onOpenShare}
                     title={t('header.share')}
+                    aria-label={t('header.share')}
                     className="p-0.5 hover:text-slate-900 dark:hover:text-white text-slate-500 dark:text-slate-400 transition-colors rounded active:scale-90"
                   >
                     <Share2 className="w-3.5 h-3.5" />
@@ -84,6 +86,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
             <button
               onClick={handleCopyCode}
               title={t('header.copyCode')}
+              aria-label={t('header.copyCode')}
               className="p-0.5 text-slate-500 dark:text-slate-400 active:scale-90"
             >
               {copied ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
@@ -97,6 +100,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
           <button
             onClick={toggleTheme}
             title={theme === 'dark' ? t('header.lightMode') : t('header.darkMode')}
+            aria-label={theme === 'dark' ? t('header.lightMode') : t('header.darkMode')}
             className="hidden sm:flex p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
@@ -107,6 +111,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
               title={t('header.language')}
+              aria-label={t('header.language')}
               className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 text-xs font-semibold transition-all active:scale-95"
             >
               <span className="text-sm leading-none">{currentLanguageMeta.flag}</span>
@@ -145,6 +150,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
               onOpenGuide();
             }}
             title={t('header.guide')}
+            aria-label={t('header.guide')}
             className="flex p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
           >
             <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -154,6 +160,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
           <button
             onClick={toggleSound}
             title={soundEnabled ? t('header.soundOn') : t('header.soundOff')}
+            aria-label={soundEnabled ? t('header.soundOn') : t('header.soundOff')}
             className={`p-1.5 sm:p-2 rounded-xl border transition-all active:scale-95 ${
               soundEnabled
                 ? 'bg-blood/20 border-blood/40 text-blood hover:bg-blood/30'
@@ -167,6 +174,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
           <button
             onClick={onOpenSettings}
             title={t('header.settings')}
+            aria-label={t('header.settings')}
             className="p-1.5 sm:p-2 rounded-xl bg-surface-light hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 transition-all active:scale-95"
           >
             <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -181,6 +189,7 @@ export default function Header({ onOpenSettings, onOpenGuide, onOpenShare }: Hea
                 }
               }}
               title={t('header.leave')}
+              aria-label={t('header.leave')}
               className="p-1.5 sm:p-2 rounded-xl bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/40 transition-all active:scale-95"
             >
               <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

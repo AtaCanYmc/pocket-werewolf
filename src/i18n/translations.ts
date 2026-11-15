@@ -438,7 +438,7 @@ export const translations: Record<LanguageCode, any> = {
       dreamMinigameSubtitle: 'Zihnini rüyada tutmak ve parmaklarını hareket ettirmek için matematik işlemlerini çöz',
       dreamScore: 'Rüya Puanı',
       dreamQuestionPrompt: 'Rüya Denklemini Çöz',
-      dreamCamouflageHint: 'Ekrana dokunmaya devam et — etraftakiler kimin uyanık olduğunu parmak hareketlerinden anlayamasın!',
+      dreamCamouflageHint: 'Ekrana dokunmaya devam et: etraftakiler kimin uyanık olduğunu parmak hareketlerinden anlayamasın!',
       hostControlTitle: 'Oda Kurucusu Kontrolü',
       hostControlSubtitle: 'Sabahın gelmesi için tüm aktif gece rollerinin kararlarını vermesi gerekir.',
       waitingForActions: 'Gece Aksiyonları Bekleniyor ({completed}/{total})',

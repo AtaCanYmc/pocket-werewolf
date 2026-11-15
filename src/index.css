@@ -51,6 +51,32 @@
     padding-left: var(--sal);
     padding-right: var(--sar);
   }
+
+  a[href],
+  button:not(:disabled),
+  summary,
+  select,
+  label[for],
+  input[type="checkbox"],
+  input[type="radio"],
+  [role="button"],
+  [role="tab"],
+  [role="switch"] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--text-muted);
+    outline-offset: 2px;
+  }
 }
 
 /* Mobile Safe Areas */
@@ -111,4 +137,16 @@ button {
 }
 button:active:not(:disabled) {
   transform: scale(0.97);
+}
+
+/* Accessible reduced motion safeguard */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
