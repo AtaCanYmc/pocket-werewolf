@@ -1,0 +1,39 @@
+name: Feature Request
+description: Propose a new role, gameplay mechanic, or architectural improvement
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check existing issues and ROADMAP.md to ensure this proposal is not already tracked.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement or Use Case
+      description: Describe the gameplay friction, missing role mechanic, or technical limitation.
+      placeholder: Currently in night phase...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: Detail the requested behavior, role rules, or API changes.
+      placeholder: Add role X with ability Y...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or rule variants considered.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Contributor Checklist
+      options:
+        - label: I searched existing issues and ROADMAP.md before submitting this request.
+          required: true
+        - label: This proposal adheres to anti-AI-slop and governance standards.
+          required: true

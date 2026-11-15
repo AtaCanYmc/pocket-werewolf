@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerabilities
+    url: https://github.com/AtaCanYmc/pocket-werewolf/security/policy
+    about: Report security vulnerabilities privately according to our security policy.
+  - name: Community Discussions
+    url: https://github.com/AtaCanYmc/pocket-werewolf/discussions
+    about: Ask questions and discuss gameplay mechanics with the community.

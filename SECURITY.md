@@ -2,30 +2,29 @@
 
 ## Supported Versions
 
-The following versions of **Pocket Werewolf** are currently being supported with security updates:
+The following versions of Pocket Werewolf receive security updates:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 2.x     | :white_check_mark: |
-| 1.x     | :x:                |
-
----
+| Major Version | Supported | Notes |
+| :--- | :--- | :--- |
+| `2.x` | Yes | Active production branch |
+| `1.x` | No | Legacy architecture |
 
 ## Reporting a Vulnerability
 
-We take the security of Pocket Werewolf seriously. If you discover a security vulnerability, please report it responsibly.
+Security issues must be reported privately to prevent premature disclosure.
 
-### How to Report:
-1. **Do not** disclose the vulnerability publicly in GitHub Issues or pull requests.
-2. Email your detailed vulnerability report to: [atacanymc@gmail.com](mailto:atacanymc@gmail.com).
-3. Include in your report:
-   - Type of issue (e.g., Supabase RLS policy bypass, cross-site scripting, denial of service).
-   - Step-by-step instructions or proof-of-concept (PoC) script to reproduce the issue.
-   - Potential impact and affected components.
+### Reporting Procedure
 
-### What to Expect:
-- You will receive an acknowledgement of your report within **48 hours**.
-- We will coordinate with you to validate and patch the issue.
-- Once a fix is deployed, a security advisory will be published and credit will be acknowledged (if requested).
+1. Do not open public GitHub issues or pull requests for security vulnerabilities.
+2. Email reports directly to: [atacanymc@gmail.com](mailto:atacanymc@gmail.com) with the subject line `[SECURITY] Pocket Werewolf Vulnerability Report`.
+3. Include the following details in your report:
+   - Vulnerability category (for example, Supabase Row Level Security policy bypass, cross-site scripting, denial of service).
+   - Step-by-step reproduction instructions or a minimal proof-of-concept payload.
+   - Affected client components, database functions, or API routes.
+   - Assessment of potential impact on game rooms or player sessions.
 
-Thank you for helping keep Pocket Werewolf safe for players worldwide! 🐺🛡️
+### Response Timeline
+
+- Initial acknowledgment: Within 48 hours of receipt.
+- Validation and triage status: Within 5 business days.
+- Remediation and disclosure coordination: Patch deployed to main prior to public release notes.
