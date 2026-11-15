@@ -255,6 +255,7 @@ export default function Home({ onOpenSettings, onOpenGuide, onOpenPwaGuide }: Ho
                     if (adminPasswordError) setAdminPasswordError(null);
                   }}
                   placeholder={t('home.adminPasswordPlaceholder')}
+                  autoComplete="current-password"
                   className="w-full px-3.5 py-2 rounded-xl bg-surface-light border border-surface-border text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:outline-none focus:border-slate-500 font-mono"
                 />
                 {adminPasswordError && (

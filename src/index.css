@@ -4,6 +4,10 @@
 
 @layer base {
   :root {
+    color-scheme: light dark;
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-border-color) transparent;
+
     --sat: env(safe-area-inset-top, 0px);
     --sar: env(safe-area-inset-right, 0px);
     --sab: env(safe-area-inset-bottom, 0px);
@@ -19,6 +23,7 @@
   }
 
   .dark {
+    color-scheme: dark;
     /* Dark Mode Palette (Sterile Minimalist Slate/Zinc Flat UI) */
     --bg-color: #090d16;
     --surface-color: #111724;
@@ -26,6 +31,10 @@
     --surface-border-color: #1e293b;
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
+  }
+
+  .light {
+    color-scheme: light;
   }
 
   html {
@@ -77,19 +86,21 @@
 }
 
 /* Custom smooth scrollbars */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--surface-border-color);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-border-color);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
 }
 
 /* Smooth active button tap feedback with crisp scale */

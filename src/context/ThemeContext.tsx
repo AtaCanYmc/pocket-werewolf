@@ -30,6 +30,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       root.classList.remove('dark');
       root.classList.add('light');
     }
+
+    let meta = document.querySelector('meta[name="color-scheme"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'color-scheme');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', newTheme);
   };
 
   useEffect(() => {
