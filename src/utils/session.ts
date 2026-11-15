@@ -19,7 +19,11 @@ export function generateRandomName(): string {
 export function getSessionId(): string {
   let sessionId = localStorage.getItem('PW_SESSION_ID');
   if (!sessionId) {
-    sessionId = 'sess_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      sessionId = 'sess_' + crypto.randomUUID().replace(/-/g, '') + Date.now().toString(36);
+    } else {
+      sessionId = 'sess_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+    }
     localStorage.setItem('PW_SESSION_ID', sessionId);
   }
   return sessionId;

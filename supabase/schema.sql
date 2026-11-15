@@ -164,7 +164,8 @@ BEGIN
     
     RETURN deleted_count;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, pg_temp;
 
 -- ==============================================================================
 -- Daily 02:00 AM Game Logs & Maintenance Cleanup
@@ -188,7 +189,8 @@ BEGIN
     
     RETURN deleted_count;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, pg_temp;
 
 -- Grant execution permissions
 GRANT EXECUTE ON FUNCTION public.cleanup_stale_rooms() TO anon, authenticated, service_role;
@@ -236,7 +238,8 @@ BEGIN
     SELECT value INTO pwd FROM public.app_settings WHERE key = 'admin_password';
     RETURN (pwd IS NOT NULL AND length(trim(pwd)) > 0);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, pg_temp;
 
 -- 2. Securely verifies the provided admin password inside PostgreSQL
 CREATE OR REPLACE FUNCTION public.verify_admin_password(input_password text)
@@ -253,7 +256,8 @@ BEGIN
     
     RETURN (input_password IS NOT NULL AND trim(input_password) = trim(actual_pwd));
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, pg_temp;
 
 -- Grant execution to anon and authenticated roles
 GRANT EXECUTE ON FUNCTION public.is_admin_password_required() TO anon, authenticated, service_role;

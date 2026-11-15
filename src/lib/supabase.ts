@@ -11,13 +11,23 @@ export function getSupabaseCredentials(): SupabaseCredentials {
   const envUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-  const url = customUrl || envUrl || '';
-  const key = customKey || envKey || '';
+  const url = (customUrl || envUrl || '').trim();
+  const key = (customKey || envKey || '').trim();
+
+  let isUrlValid = false;
+  if (url) {
+    try {
+      const parsed = new URL(url);
+      isUrlValid = parsed.protocol === 'https:' || parsed.protocol === 'http:';
+    } catch {
+      isUrlValid = false;
+    }
+  }
 
   return {
     url,
     key,
-    isConfigured: Boolean(url && key && url.startsWith('http'))
+    isConfigured: Boolean(isUrlValid && key)
   };
 }
 

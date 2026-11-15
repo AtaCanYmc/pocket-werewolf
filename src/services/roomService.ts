@@ -9,6 +9,15 @@ import { logger } from '@/utils/logger';
  */
 export function generateRoomCode(): string {
   const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    const array = new Uint32Array(4);
+    crypto.getRandomValues(array);
+    let code = '';
+    for (let i = 0; i < 4; i++) {
+      code += letters.charAt(array[i] % letters.length);
+    }
+    return code;
+  }
   let code = '';
   for (let i = 0; i < 4; i++) {
     code += letters.charAt(Math.floor(Math.random() * letters.length));
