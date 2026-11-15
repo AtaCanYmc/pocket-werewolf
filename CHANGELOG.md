@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.7.0](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.6.1...pocket-werewolf-v2.7.0) (2026-11-15)
+
+
+### ✨ Features
+
+* **web:** modernize scrollbars, color-scheme meta sync, and form autofill ([61781c3](https://github.com/AtaCanYmc/pocket-werewolf/commit/61781c33cf1718f3c0d730d012418c5b39f9b599))
+
+
+### 🐛 Bug Fixes
+
+* **antislop:** resolve accessibility affordances, viewport zoom and localization copy ([5fa1ca3](https://github.com/AtaCanYmc/pocket-werewolf/commit/5fa1ca3faf3a118478d26327e60fdda80ddde4ff))
+* **security:** patch dependency CVEs, harden PostgreSQL functions and sanitize credentials ([bcee917](https://github.com/AtaCanYmc/pocket-werewolf/commit/bcee9178365dd02b2ee89b3be3eabd466be3cdbc))
+
+
+### 📚 Documentation
+
+* establish production governance and anti-slop documentation ([dc12662](https://github.com/AtaCanYmc/pocket-werewolf/commit/dc12662af5a8ba66ef79a526862316b8a03a1c02))
+
+
+### 🧹 Miscellaneous Chores
+
+* ignore anti-slop reports and remove from remote ([97c31a1](https://github.com/AtaCanYmc/pocket-werewolf/commit/97c31a1b3aa7881471f49ee6c7f85c01c49b1675))
+
 ## [2.6.1](https://github.com/AtaCanYmc/pocket-werewolf/compare/pocket-werewolf-v2.6.0...pocket-werewolf-v2.6.1) (2026-09-10)
 
 
